@@ -97,7 +97,7 @@ namespace ITBLiveSplitModEnhanced
                 }
                 lsm.ResetTimer(); //Probably bad practice considering Hotel Ending wouldnt want reset? Though I guess you can just add times in post.
             }
-            if (sceneName != "MainMenu")
+            if (sceneName == "MainMenu" || sceneName == "HOTEL_SCENE")
             {
                 inGame = true;
                 MelonEvents.OnGUI.Unsubscribe(DrawRegisteredMods);
