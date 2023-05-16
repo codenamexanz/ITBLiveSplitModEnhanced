@@ -28,15 +28,25 @@ namespace ITBLiveSplitModEnhanced
         //Setup InGame bool - maybe deprecated in the future?
         private static bool elevator = false;
         private static bool hammer = false;
+
         //Setup GUI
-        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 125f);
+        #region GUI Fields
+        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 340f);
         private float buttonWidth = 260f;
         private float buttonHeight = 30f;
         private static bool showStartSplits = false;
         private static bool showPauseSplits = false;
         private static bool showEndSplits = false;
+        private static bool showDeathSplits = false;
+        private static bool showDarkroomsSplits = false;
+        private static bool showGarageSplits = false;
+        private static bool showOfficeSplits = false;
+        private static bool showSewersSplits = false;
+        private static bool showHotelSplits = false;
+        #endregion
 
         //Setup Splits
+        #region Splits Fields
         //Start Splits
         private static bool ladderStart = false;
         private static bool darkroomsStart = false;
@@ -116,7 +126,7 @@ namespace ITBLiveSplitModEnhanced
         private static bool hotelSplitsBoilerKeys = false;
         private static bool hotelSplitsBoilersOn = false;
         private static bool hotelSplitsRingTable = false;
-
+        #endregion
 
         public override void OnInitializeMelon()
         {
@@ -196,25 +206,50 @@ namespace ITBLiveSplitModEnhanced
                 buttonStyle.normal.textColor = GUI.skin.button.normal.textColor;
             }
 
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + offsety, buttonWidth, buttonHeight), label, buttonStyle))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + offsety + 225f, buttonWidth, buttonHeight), label, buttonStyle))
             {
                 boolVariable = !boolVariable;
                 MelonLogger.Msg(System.ConsoleColor.Green, label + " Button Down");
+                MelonLogger.Msg(System.ConsoleColor.Green, label + " bool changed to " + boolVariable);
             }
+        }
+
+        public void SetAllButtonsFalse()
+        {
+            showStartSplits = false;
+            showPauseSplits = false;
+            showEndSplits = false;
+            showDeathSplits = false;
+            showDarkroomsSplits = false;
+            showGarageSplits = false;
+            showOfficeSplits = false;
+            showSewersSplits = false;
+            showHotelSplits = false;
         }
 
         public void DrawRunSelector()
         {
             GUI.Box(runSelectorRect, "Splits Customizer");
-           
+
+            #region Start Splits
+
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 20f, buttonWidth, buttonHeight), "Splits that Start"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Start Splits Button Down");
-                showStartSplits = !showStartSplits;
+                if (showStartSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showStartSplits = true;
+                }
             }
+
             if (showStartSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 125f, 270f, buttonHeight * 8 + 5 * 9), "");
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 8 + 5 * 9), "");
                 //Note this will need moved down with the introduction of death + level split buttons
                 CreateButton("Ladder Start", ref ladderStart, 130f);
                 CreateButton("Darkrooms Start", ref darkroomsStart, 165f);
@@ -225,18 +260,251 @@ namespace ITBLiveSplitModEnhanced
                 CreateButton("Sewers Start", ref sewersStart, 340f);
                 CreateButton("Hotel Start", ref hotelStart, 375f);
             }
+            #endregion
+
+            #region Pause Splits
 
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 55f, buttonWidth, buttonHeight), "Splits that Pause"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Pause Splits Button Down");
+                if (showPauseSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showPauseSplits = true;
+                }
             }
+
+            if (showPauseSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Escape End Pause", ref pauseSplitsEscapeEnd, 130f);
+                CreateButton("Chase End Pause", ref pauseSplitsChaseEnd, 165f);
+                CreateButton("Fun End Pause", ref pauseSplitsFunEnd, 200f);
+                CreateButton("Sewer End Pause", ref pauseSplitsSewersEnd, 235f);
+                CreateButton("Hotel End Pause", ref pauseSplitsHotelEnd, 270f);
+            }
+            #endregion
+
+            #region End Splits
 
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 90f, buttonWidth, buttonHeight), "Splits that End"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "End Splits Button Down");
+                if (showEndSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showEndSplits = true;
+                }
             }
 
-            /*// Categories Menu
+            if (showEndSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Escape End", ref endSplitsEscapeEnd, 130f);
+                CreateButton("Chase End", ref endSplitsChaseEnd, 165f);
+                CreateButton("Fun End", ref endSplitsFunEnd, 200f);
+                CreateButton("Sewer End", ref endSplitsSewersEnd, 235f);
+                CreateButton("Hotel End", ref endSplitsHotelEnd, 270f);
+            }
+            #endregion
+
+            #region Death Splits
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 125f, buttonWidth, buttonHeight), "Death Splits"))
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Death Splits Button Down");
+                if (showDeathSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showDeathSplits = true;
+                }
+            }
+
+            if (showDeathSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 15 + 5 * 16), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Bacteria Death", ref deathSplitsBacteria, 130f);
+                CreateButton("Dog Death", ref deathSplitsDog, 165f);
+                CreateButton("Smiler Death", ref deathSplitsSmiler, 200f);
+                CreateButton("Radiation Death", ref deathSplitsRadiation, 235f);
+                CreateButton("Skin Stealer Death", ref deathSplitsSkinStealer, 270f);
+                CreateButton("Gas Death", ref deathSplitsGas, 305f);
+                CreateButton("Party Goer Death", ref deathSplitsPartyGoer, 340f);
+                CreateButton("Balloons Death", ref deathSplitsBalloons, 375f);
+                CreateButton("Electricity Death", ref deathSplitsElectricity, 410f);
+                CreateButton("Spider Death", ref deathSplitsSpider, 445f);
+                CreateButton("Rat Death", ref deathSplitsRat, 480f);
+                CreateButton("Rat Death", ref deathSplitsCrusher, 515f);
+                CreateButton("Spikes Death", ref deathSplitsSpikes, 550f);
+                CreateButton("Moth Death", ref deathSplitsMoth, 585f);
+                CreateButton("Receptionist Death", ref deathSplitsReceptionist, 620f);
+            }
+
+            #endregion
+
+            #region Darkrooms Splits
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 160f, buttonWidth, buttonHeight), "Darkrooms Splits"))
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Darkrooms Splits Button Down");
+                if (showDarkroomsSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showDarkroomsSplits = true;
+                }
+            }
+
+            if (showDarkroomsSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Darkrooms Test 1", ref endSplitsEscapeEnd, 130f);
+                CreateButton("Darkrooms Test 2", ref endSplitsChaseEnd, 165f);
+                CreateButton("Darkrooms Test 3", ref endSplitsFunEnd, 200f);
+                CreateButton("Darkrooms Test 4", ref endSplitsSewersEnd, 235f);
+                CreateButton("Darkrooms Test 5", ref endSplitsHotelEnd, 270f);
+            }
+
+            #endregion
+
+            #region Garage Splits
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 195f, buttonWidth, buttonHeight), "Garage Splits"))
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Garage Splits Button Down");
+                if (showGarageSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showGarageSplits = true;
+                }
+            }
+
+            if (showGarageSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Garage Test 1", ref endSplitsEscapeEnd, 130f);
+                CreateButton("Garage Test 2", ref endSplitsChaseEnd, 165f);
+                CreateButton("Garage Test 3", ref endSplitsFunEnd, 200f);
+                CreateButton("Garage Test 4", ref endSplitsSewersEnd, 235f);
+                CreateButton("Garage Test 5", ref endSplitsHotelEnd, 270f);
+            }
+
+            #endregion
+
+            #region Office Splits
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 230f, buttonWidth, buttonHeight), "Office Splits"))
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Office Splits Button Down");
+                if (showOfficeSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showOfficeSplits = true;
+                }
+            }
+
+            if (showOfficeSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Office Test 1", ref endSplitsEscapeEnd, 130f);
+                CreateButton("Office Test 2", ref endSplitsChaseEnd, 165f);
+                CreateButton("Office Test 3", ref endSplitsFunEnd, 200f);
+                CreateButton("Office Test 4", ref endSplitsSewersEnd, 235f);
+                CreateButton("Office Test 5", ref endSplitsHotelEnd, 270f);
+            }
+
+            #endregion
+
+            #region Sewers Splits
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 265f, buttonWidth, buttonHeight), "Sewers Splits"))
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Sewers Splits Button Down");
+                if (showSewersSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showSewersSplits = true;
+                }
+            }
+
+            if (showSewersSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Sewers Test 1", ref endSplitsEscapeEnd, 130f);
+                CreateButton("Sewers Test 2", ref endSplitsChaseEnd, 165f);
+                CreateButton("Sewers Test 3", ref endSplitsFunEnd, 200f);
+                CreateButton("Sewers Test 4", ref endSplitsSewersEnd, 235f);
+                CreateButton("Sewers Test 5", ref endSplitsHotelEnd, 270f);
+            }
+
+            #endregion
+
+            #region Hotel Splits
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 300f, buttonWidth, buttonHeight), "Hotel Splits"))
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Hotel Splits Button Down");
+                if (showHotelSplits)
+                {
+                    SetAllButtonsFalse();
+                }
+                else
+                {
+                    SetAllButtonsFalse();
+                    showHotelSplits = true;
+                }
+            }
+
+            if (showHotelSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Hotel Test 1", ref endSplitsEscapeEnd, 130f);
+                CreateButton("Hotel Test 2", ref endSplitsChaseEnd, 165f);
+                CreateButton("Hotel Test 3", ref endSplitsFunEnd, 200f);
+                CreateButton("Hotel Test 4", ref endSplitsSewersEnd, 235f);
+                CreateButton("Hotel Test 5", ref endSplitsHotelEnd, 270f);
+            }
+
+            #endregion
+
+
+            /*
+            // Categories Menu
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 75f, buttonWidth, buttonHeight), "Categories"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Categories Button Down");
@@ -276,7 +544,8 @@ namespace ITBLiveSplitModEnhanced
                     //Individual Levels
 
                 }
-            }*/
+            }
+            */
         }
 
         /*
