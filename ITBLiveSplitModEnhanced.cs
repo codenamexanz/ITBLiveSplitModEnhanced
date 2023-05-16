@@ -40,105 +40,78 @@ namespace ITBLiveSplitModEnhanced
         private static bool showILsMenu = false;
 
         //Setup Splits
-        private enum StarterSplits
-        {
-            None,
-            Ladder,
-            HotelStart
-        }
-        private enum PauseSplits
-        {
-            None,
-            EscapeEnd,
-            ChaseEnd,
-            FunEnd,
-            SewersEnd,
-            HotelEnd
-        }
-        private enum EndSplits
-        {
-            None,
-            EscapeEnd,
-            ChaseEnd,
-            FunEnd,
-            SewersEnd,
-            HotelEnd
-        }
-        private enum DeathSplits
-        {
-            None,
-            Bacteria,
-            Dog,
-            Smiler,
-            Radiation,
-            SkinStealer,
-            Gas,
-            PartyGoer,
-            Balloons,
-            Electricity,
-            Spider,
-            Rat,
-            Crusher,
-            Spikes,
-            Moth,
-            Receptionist
-        }
-        private enum DarkroomsSplits
-        {
-            None,
-            LobbyElevator,
-            VHSPutIn,
-            Hammer,
-            Clock,
-            RedKey,
-            FuseBox,
-            Mirror,
-            Levers,
-            Radiation,
-            ChainCut
-        }
-        private enum GarageSplits
-        {
-            None,
-            EnterGarage,
-            ValvesDone,
-            GarageElevator
-        }
-        private enum OfficeSplits
-        {
-            None,
-            FusesDone,
-            BlueDoor,
-            PartyStart,
-            Balloons,
-            Presents,
-            CakeExplode,
-            RedDoor,
-            SecurityGrid
-        }
-        private enum SewersSplits
-        {
-            None,
-            MetalDetector,
-            SpikesOff,
-            LabyrinthChain,
-            CrusherPuzzle,
-            GearSpawn,
-            Counterweights
-        }
-        private enum HotelSplits
-        {
-            None,
-            Paintings,
-            Statue,
-            Vinyl,
-            Piano,
-            Phone,
-            GemIn,
-            BoilerKeys,
-            BoilersOn,
-            RingTable
-        }
+        //Start Splits
+        private static bool ladderStart = false;
+        private static bool hotelStart = false;
+        //Pause Splits
+        private static bool pauseSplitsEscapeEnd = false;
+        private static bool pauseSplitsChaseEnd = false;
+        private static bool pauseSplitsFunEnd = false;
+        private static bool pauseSplitsSewersEnd = false;
+        private static bool pauseSplitsHotelEnd = false;
+        //End Splits
+        private static bool endSplitsEscapeEnd = false;
+        private static bool endSplitsChaseEnd = false;
+        private static bool endSplitsFunEnd = false;
+        private static bool endSplitsSewersEnd = false;
+        private static bool endSplitsHotelEnd = false;
+        //Death Splits
+        private static bool deathSplitsBacteria = false;
+        private static bool deathSplitsDog = false;
+        private static bool deathSplitsSmiler = false;
+        private static bool deathSplitsRadiation = false;
+        private static bool deathSplitsSkinStealer = false;
+        private static bool deathSplitsGas = false;
+        private static bool deathSplitsPartyGoer = false;
+        private static bool deathSplitsBalloons = false;
+        private static bool deathSplitsElectricity = false;
+        private static bool deathSplitsSpider = false;
+        private static bool deathSplitsRat = false;
+        private static bool deathSplitsCrusher = false;
+        private static bool deathSplitsSpikes = false;
+        private static bool deathSplitsMoth = false;
+        private static bool deathSplitsReceptionist = false;
+        //Darkrooms Splits
+        private static bool darkroomsSplitsLobbyElevator = false;
+        private static bool darkroomsSplitsVHSPutIn = false;
+        private static bool darkroomsSplitsHammer = false;
+        private static bool darkroomsSplitsClock = false;
+        private static bool darkroomsSplitsRedKey = false;
+        private static bool darkroomsSplitsFuseBox = false;
+        private static bool darkroomsSplitsMirror = false;
+        private static bool darkroomsSplitsLevers = false;
+        private static bool darkroomsSplitsRadiation = false;
+        private static bool darkroomsSplitsChainCut = false;
+        //Garage Splits
+        private static bool garageSplitsEnterGarage = false;
+        private static bool garageSplitsValvesDone = false;
+        private static bool garageSplitsGarageElevator = false;
+        //Office Splits
+        private static bool officeSplitsFusesDone = false;
+        private static bool officeSplitsBlueDoor = false;
+        private static bool officeSplitsPartyStart = false;
+        private static bool officeSplitsBalloons = false;
+        private static bool officeSplitsPresents = false;
+        private static bool officeSplitsCakeExplode = false;
+        private static bool officeSplitsRedDoor = false;
+        private static bool officeSplitsSecurityGrid = false;
+        //Sewers Splits
+        private static bool sewersSplitsMetalDetector = false;
+        private static bool sewersSplitsSpikesOff = false;
+        private static bool sewersSplitsLabyrinthChain = false;
+        private static bool sewersSplitsCrusherPuzzle = false;
+        private static bool sewersSplitsGearSpawn = false;
+        private static bool sewersSplitsCounterweights = false;
+        //Hotel Splits
+        private static bool hotelSplitsPaintings = false;
+        private static bool hotelSplitsStatue = false;
+        private static bool hotelSplitsVinyl = false;
+        private static bool hotelSplitsPiano = false;
+        private static bool hotelSplitsPhone = false;
+        private static bool hotelSplitsGemIn = false;
+        private static bool hotelSplitsBoilerKeys = false;
+        private static bool hotelSplitsBoilersOn = false;
+        private static bool hotelSplitsRingTable = false;
 
 
         public override void OnInitializeMelon()
