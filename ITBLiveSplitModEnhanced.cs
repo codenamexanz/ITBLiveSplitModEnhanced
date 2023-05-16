@@ -279,7 +279,8 @@ namespace ITBLiveSplitModEnhanced
             }*/
         }
 
-        /*//Start of Patches
+        /*
+        //Start of Patches
         //Start Timer when using ladder on level 0 - Usable for Escape, Fun, Chase, Sewers, Hotel, All Endings
         [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
         class BasePlayerControllerPatch
@@ -298,6 +299,232 @@ namespace ITBLiveSplitModEnhanced
                     lsm.StartTimer();
                 }
             }
-        }*/
+        }
+        
+        //Split Timer when using the elevator
+        [HarmonyPatch(typeof(Elevator), "RpcDoorElevatorPlay")]
+        class ElevatorPatch
+        {
+            [HarmonyPrefix]
+            internal static void RpcDoorElevatorPlayPrefix()
+            {
+                if (!elevator)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "Testing Elevator");
+                    if (lsm == null)
+                    {
+                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                        return;
+                    }
+
+                    lsm.SplitTimer();
+                    elevator = true;
+                }
+            }
+        }
+
+        //Split Timer when the Mirror breaks
+        [HarmonyPatch(typeof(LostPersonsPuzzle), "DestroyGlass")]
+        class LostPersonsPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void DestroyGlassPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Mirror Break");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the chain is cut after radiation
+        [HarmonyPatch(typeof(DoorChain), "OnChainCut")]
+        class DoorChainPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnChainCutPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Chain Cut");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+                elevator = false;
+            }
+        }
+
+        //Split Timer when the Party Room Starts
+        [HarmonyPatch(typeof(PartygoerRoom), "StartPartyGames")]
+        class PartygoerRoomPatch
+        {
+            [HarmonyPrefix]
+            internal static void StartPartyGamesPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Party Room Start");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Party Room Starts
+        [HarmonyPatch(typeof(PartygoerCake), "Explode")]
+        class PartygoerCakePatch
+        {
+            [HarmonyPrefix]
+            internal static void ExplodePrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Cake Explode");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Security Door
+        [HarmonyPatch(typeof(SecretGridComputerPuzzle), "SetGateOpenStatus")]
+        class SecretGridComputerPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void SetGateOpenStatusPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Security Door");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Spikes off
+        [HarmonyPatch(typeof(PikesDisabler), "DisablePikes")]
+        class PikesDisablerPatch
+        {
+            [HarmonyPrefix]
+            internal static void DisablePikesPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Disable Spikes");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Garbage Crusher off
+        [HarmonyPatch(typeof(GridPuzzle), "OnGridSolved")]
+        class GridPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnGridSolvedPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Garbage Crusher Discable");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Medallion Puzzle
+        [HarmonyPatch(typeof(MedallionsStatue), "OnUnlocked")]
+        class MedallionsStatuePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnUnlockedPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Medallion puzzle");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Gear Rotation
+        [HarmonyPatch(typeof(GearPuzzle), "OnPuzzleSolve")]
+        class GearPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnPuzzleSolvePrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Gear Rotation puzzle");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+
+        //Split Timer when the Escaped/Chase Ending
+        [HarmonyPatch(typeof(BackroomsExitZone), "OnTriggerEnter")]
+        class BackroomsExitZonePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnTriggerEnterPrefix()
+            {
+                numEscaped++;
+                if (numEscaped == numPlayers)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "Testing Escape/Chase Ending");
+                    if (lsm == null)
+                    {
+                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                        return;
+                    }
+
+                    lsm.SplitTimer();
+                }
+            }
+        }
+
+        //Split Timer when the Fun Ending and Sewer Ending 
+        [HarmonyPatch(typeof(EndInteractable), "Interact")]
+        class EndInteractablePatch
+        {
+            [HarmonyPrefix]
+            internal static void InteractPrefix()
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Fun/Sewer Ending");
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+
+                lsm.SplitTimer();
+            }
+        }
+        */
     }
 }
