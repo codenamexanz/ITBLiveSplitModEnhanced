@@ -38,35 +38,108 @@ namespace ITBLiveSplitModEnhanced
         private static bool showCategoriesMenu = false;
         private static bool showEndingsMenu = false;
         private static bool showILsMenu = false;
-        private static bool showCategoryExtensionsMenu = false;
-        //Setup GameRule
-        private enum GameRule
+
+        //Setup Splits
+        private enum StarterSplits
         {
             None,
-            Any,
-            Glitchless,
-            Inbounds
+            Ladder,
+            HotelStart
         }
-        private static GameRule selectedGameRule;
-        //Setup Run Categories
-        private enum RunCategory
+        private enum PauseSplits
         {
             None,
-            Escape,
-            Fun,
-            Chase,
-            Sewer,
-            Hotel,
-            AllEndings,
-            Darkrooms,
-            Garage,
-            Office,
-            FunRoom,
-            ChaseLevel,
-            Sewers,
-            TerrorHotel
+            EscapeEnd,
+            ChaseEnd,
+            FunEnd,
+            SewersEnd,
+            HotelEnd
         }
-        private static RunCategory selectedRunCategory;
+        private enum EndSplits
+        {
+            None,
+            EscapeEnd,
+            ChaseEnd,
+            FunEnd,
+            SewersEnd,
+            HotelEnd
+        }
+        private enum DeathSplits
+        {
+            None,
+            Bacteria,
+            Dog,
+            Smiler,
+            Radiation,
+            SkinStealer,
+            Gas,
+            PartyGoer,
+            Balloons,
+            Electricity,
+            Spider,
+            Rat,
+            Crusher,
+            Spikes,
+            Moth,
+            Receptionist
+        }
+        private enum DarkroomsSplits
+        {
+            None,
+            LobbyElevator,
+            VHSPutIn,
+            Hammer,
+            Clock,
+            RedKey,
+            FuseBox,
+            Mirror,
+            Levers,
+            Radiation,
+            ChainCut
+        }
+        private enum GarageSplits
+        {
+            None,
+            EnterGarage,
+            ValvesDone,
+            GarageElevator
+        }
+        private enum OfficeSplits
+        {
+            None,
+            FusesDone,
+            BlueDoor,
+            PartyStart,
+            Balloons,
+            Presents,
+            CakeExplode,
+            RedDoor,
+            SecurityGrid
+        }
+        private enum SewersSplits
+        {
+            None,
+            MetalDetector,
+            SpikesOff,
+            LabyrinthChain,
+            CrusherPuzzle,
+            GearSpawn,
+            Counterweights
+        }
+        private enum HotelSplits
+        {
+            None,
+            Paintings,
+            Statue,
+            Vinyl,
+            Piano,
+            Phone,
+            GemIn,
+            BoilerKeys,
+            BoilersOn,
+            RingTable
+        }
+
 
         public override void OnInitializeMelon()
         {
@@ -89,7 +162,7 @@ namespace ITBLiveSplitModEnhanced
                 elevator = false;
                 hammer = false;
                 MelonEvents.OnGUI.Subscribe(DrawRegisteredMods, 100);
-                MelonEvents.OnGUI.Subscribe(DrawRunSelector, 100);
+                //MelonEvents.OnGUI.Subscribe(DrawRunSelector, 100);
                 if (lsm == null)
                 {
                     MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
@@ -101,7 +174,7 @@ namespace ITBLiveSplitModEnhanced
             {
                 inGame = true;
                 MelonEvents.OnGUI.Unsubscribe(DrawRegisteredMods);
-                MelonEvents.OnGUI.Unsubscribe(DrawRunSelector);
+                //MelonEvents.OnGUI.Unsubscribe(DrawRunSelector);
             }
         }
 
@@ -131,7 +204,7 @@ namespace ITBLiveSplitModEnhanced
             GUI.Label(new Rect(Screen.width - 500 - 10, 100, 500, 100), listOfMods, style);
         }
 
-        public void CreateCategory(string category, float offsety)
+        /*public void CreateCategory(string category, float offsety)
         {
             if (GUI.Button(new Rect(runSelectorRect.x + 15f, runSelectorRect.y + offsety, buttonWidth3, 30f), category))
             {
@@ -149,7 +222,7 @@ namespace ITBLiveSplitModEnhanced
 
         public void DrawRunSelector()
         {
-            GUI.Box(runSelectorRect, "Run Selector");
+            GUI.Box(runSelectorRect, "Run Selector\nCurrent Setup: " + selectedGameRule.ToString() + " " + selectedRunCategory.ToString());
            
             // Run Types
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 40f, smallButtonWidth, buttonHeight), "Any%"))
@@ -187,7 +260,7 @@ namespace ITBLiveSplitModEnhanced
                     MelonLogger.Msg(System.ConsoleColor.Green, "Endings Button Down");
                     showEndingsMenu = !showEndingsMenu;
                     showILsMenu = false;
-                    showCategoryExtensionsMenu = false;
+                    //showCategoryExtensionsMenu = false;
                 }
                 if (showEndingsMenu)
                 {
@@ -207,7 +280,7 @@ namespace ITBLiveSplitModEnhanced
                     MelonLogger.Msg(System.ConsoleColor.Green, "ILs Button Down");
                     showILsMenu = !showILsMenu;
                     showEndingsMenu = false;
-                    showCategoryExtensionsMenu = false;
+                    //showCategoryExtensionsMenu = false;
                 }
                 if (showILsMenu)
                 {
@@ -221,19 +294,11 @@ namespace ITBLiveSplitModEnhanced
                     CreateCategory("Sewers", 410f);
                     CreateCategory("TerrorHotel", 445f);
                 }
-
-                // Extensions submenu
-                if (GUI.Button(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 190f, buttonWidth2, buttonHeight), "Extensions"))
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "Extensions Button Down");
-                    showCategoryExtensionsMenu = !showCategoryExtensionsMenu;
-                }
             }
         }
 
         //Start of Patches
         //Start Timer when using ladder on level 0 - Usable for Escape, Fun, Chase, Sewers, Hotel, All Endings
-
         [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
         class BasePlayerControllerPatch
         {
@@ -251,6 +316,6 @@ namespace ITBLiveSplitModEnhanced
                     lsm.StartTimer();
                 }
             }
-        }
+        }*/
     }
 }
