@@ -29,19 +29,22 @@ namespace ITBLiveSplitModEnhanced
         private static bool elevator = false;
         private static bool hammer = false;
         //Setup GUI
-        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 110f);
+        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 125f);
         private float buttonWidth = 260f;
-        private float buttonWidth2 = 250f;
-        private float buttonWidth3 = 240f;
         private float buttonHeight = 30f;
-        private float smallButtonWidth = 80f;
-        private static bool showCategoriesMenu = false;
-        private static bool showEndingsMenu = false;
-        private static bool showILsMenu = false;
+        private static bool showStartSplits = false;
+        private static bool showPauseSplits = false;
+        private static bool showEndSplits = false;
 
         //Setup Splits
         //Start Splits
         private static bool ladderStart = false;
+        private static bool darkroomsStart = false;
+        private static bool garageStart = false;
+        private static bool officeStart = false;
+        private static bool chaseStart = false;
+        private static bool funRoomStart = false;
+        private static bool sewersStart = false;
         private static bool hotelStart = false;
         //Pause Splits
         private static bool pauseSplitsEscapeEnd = false;
@@ -95,6 +98,7 @@ namespace ITBLiveSplitModEnhanced
         private static bool officeSplitsCakeExplode = false;
         private static bool officeSplitsRedDoor = false;
         private static bool officeSplitsSecurityGrid = false;
+        private static bool officeSplitsChase = false;
         //Sewers Splits
         private static bool sewersSplitsMetalDetector = false;
         private static bool sewersSplitsSpikesOff = false;
@@ -135,7 +139,7 @@ namespace ITBLiveSplitModEnhanced
                 elevator = false;
                 hammer = false;
                 MelonEvents.OnGUI.Subscribe(DrawRegisteredMods, 100);
-                //MelonEvents.OnGUI.Subscribe(DrawRunSelector, 100);
+                MelonEvents.OnGUI.Subscribe(DrawRunSelector, 100);
                 if (lsm == null)
                 {
                     MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
@@ -143,11 +147,11 @@ namespace ITBLiveSplitModEnhanced
                 }
                 lsm.ResetTimer(); //Probably bad practice considering Hotel Ending wouldnt want reset? Though I guess you can just add times in post.
             }
-            if (sceneName == "MainMenu" || sceneName == "HOTEL_SCENE")
+            if (sceneName == "MainLevel" || sceneName == "HOTEL_SCENE")
             {
                 inGame = true;
                 MelonEvents.OnGUI.Unsubscribe(DrawRegisteredMods);
-                //MelonEvents.OnGUI.Unsubscribe(DrawRunSelector);
+                MelonEvents.OnGUI.Unsubscribe(DrawRunSelector);
             }
         }
 
@@ -177,46 +181,62 @@ namespace ITBLiveSplitModEnhanced
             GUI.Label(new Rect(Screen.width - 500 - 10, 100, 500, 100), listOfMods, style);
         }
 
-        /*public void CreateCategory(string category, float offsety)
+        public void CreateButton(string label, ref bool boolVariable, float offsety)
         {
-            if (GUI.Button(new Rect(runSelectorRect.x + 15f, runSelectorRect.y + offsety, buttonWidth3, 30f), category))
+            GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+
+            if (boolVariable)
             {
-                if (Enum.TryParse(category, out RunCategory runCategory))
-                {
-                    selectedRunCategory = runCategory;
-                }
-                else
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Red, "Invalid Category: " + category);
-                }
-                MelonLogger.Msg(System.ConsoleColor.Green, category + " Button Down");
+                buttonStyle.normal.background = Texture2D.whiteTexture;
+                buttonStyle.normal.textColor = Color.black;
+            }
+            else
+            {
+                buttonStyle.normal.background = GUI.skin.button.normal.background;
+                buttonStyle.normal.textColor = GUI.skin.button.normal.textColor;
+            }
+
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + offsety, buttonWidth, buttonHeight), label, buttonStyle))
+            {
+                boolVariable = !boolVariable;
+                MelonLogger.Msg(System.ConsoleColor.Green, label + " Button Down");
             }
         }
 
         public void DrawRunSelector()
         {
-            GUI.Box(runSelectorRect, "Run Selector\nCurrent Setup: " + selectedGameRule.ToString() + " " + selectedRunCategory.ToString());
+            GUI.Box(runSelectorRect, "Splits Customizer");
            
-            // Run Types
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 40f, smallButtonWidth, buttonHeight), "Any%"))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 20f, buttonWidth, buttonHeight), "Splits that Start"))
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Any% Button Down");
-                selectedGameRule = GameRule.Any;
+                MelonLogger.Msg(System.ConsoleColor.Green, "Start Splits Button Down");
+                showStartSplits = !showStartSplits;
+            }
+            if (showStartSplits)
+            {
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 125f, 270f, buttonHeight * 8 + 5 * 9), "");
+                //Note this will need moved down with the introduction of death + level split buttons
+                CreateButton("Ladder Start", ref ladderStart, 130f);
+                CreateButton("Darkrooms Start", ref darkroomsStart, 165f);
+                CreateButton("Garage Start", ref garageStart, 200f);
+                CreateButton("Office Start", ref officeStart, 235f);
+                CreateButton("Fun Room Start", ref funRoomStart, 270f);
+                CreateButton("Chase Start", ref chaseStart, 305f);
+                CreateButton("Sewers Start", ref sewersStart, 340f);
+                CreateButton("Hotel Start", ref hotelStart, 375f);
             }
 
-            if (GUI.Button(new Rect(runSelectorRect.x + 95f, runSelectorRect.y + 40f, smallButtonWidth, buttonHeight), "Inbounds"))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 55f, buttonWidth, buttonHeight), "Splits that Pause"))
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Inbounds Button Down");
-                selectedGameRule = GameRule.Inbounds;
+                MelonLogger.Msg(System.ConsoleColor.Green, "Pause Splits Button Down");
             }
 
-            if (GUI.Button(new Rect(runSelectorRect.x + 185f, runSelectorRect.y + 40f, smallButtonWidth, buttonHeight), "Glitchless"))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 90f, buttonWidth, buttonHeight), "Splits that End"))
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Glitchless Button Down");
-                selectedGameRule = GameRule.Glitchless;
+                MelonLogger.Msg(System.ConsoleColor.Green, "End Splits Button Down");
             }
 
-            // Categories Menu
+            /*// Categories Menu
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 75f, buttonWidth, buttonHeight), "Categories"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Categories Button Down");
@@ -239,12 +259,7 @@ namespace ITBLiveSplitModEnhanced
                 {
                     GUI.Box(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 230f, buttonWidth2, buttonHeight * 6 + 5 * (6+1)), "");
                     //Individual Endings
-                    CreateCategory("Escape", 235f);
-                    CreateCategory("Fun", 270f);
-                    CreateCategory("Chase", 305f);
-                    CreateCategory("Sewer", 340f);
-                    CreateCategory("Hotel", 375f);
-                    CreateCategory("AllEndings", 410f);
+
                 }
 
                 // ILs submenu
@@ -259,18 +274,12 @@ namespace ITBLiveSplitModEnhanced
                 {
                     GUI.Box(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 230f, buttonWidth2, buttonHeight * 7 + 5 * (7 + 1)), "");
                     //Individual Levels
-                    CreateCategory("Darkrooms", 235f);
-                    CreateCategory("Garage", 270f);
-                    CreateCategory("Office", 305f);
-                    CreateCategory("FunRoom", 340f);
-                    CreateCategory("ChaseLevel", 375f);
-                    CreateCategory("Sewers", 410f);
-                    CreateCategory("TerrorHotel", 445f);
+
                 }
-            }
+            }*/
         }
 
-        //Start of Patches
+        /*//Start of Patches
         //Start Timer when using ladder on level 0 - Usable for Escape, Fun, Chase, Sewers, Hotel, All Endings
         [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
         class BasePlayerControllerPatch
