@@ -5,9 +5,7 @@ using static UnityEngine.Object;
 using Il2Cpp;
 using HarmonyLib;
 using System.Reflection;
-using static MelonLoader.MelonLogger;
 using Il2CppMirror;
-using JetBrains.Annotations;
 
 namespace ITBLiveSplitModEnhanced
 {
@@ -44,6 +42,7 @@ namespace ITBLiveSplitModEnhanced
         //Setup GameRule
         private enum GameRule
         {
+            None,
             Any,
             Glitchless,
             Inbounds
@@ -52,6 +51,7 @@ namespace ITBLiveSplitModEnhanced
         //Setup Run Categories
         private enum RunCategory
         {
+            None,
             Escape,
             Fun,
             Chase,
@@ -228,7 +228,28 @@ namespace ITBLiveSplitModEnhanced
                     MelonLogger.Msg(System.ConsoleColor.Green, "Extensions Button Down");
                     showCategoryExtensionsMenu = !showCategoryExtensionsMenu;
                 }
-                
+            }
+        }
+
+        //Start of Patches
+        //Start Timer when using ladder on level 0 - Usable for Escape, Fun, Chase, Sewers, Hotel, All Endings
+
+        [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
+        class BasePlayerControllerPatch
+        {
+            [HarmonyPrefix]
+            internal static void UseStairsPrefix()
+            {
+                if (new[] { RunCategory.Escape, RunCategory.Fun, RunCategory.Chase, RunCategory.Sewer, RunCategory.Hotel, RunCategory.AllEndings }.Contains(selectedRunCategory))
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "Testing Ladder");
+                    if (lsm == null)
+                    {
+                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                        return;
+                    }
+                    lsm.StartTimer();
+                }
             }
         }
     }
