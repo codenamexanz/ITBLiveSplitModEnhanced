@@ -7,6 +7,7 @@ using HarmonyLib;
 using System.Reflection;
 using static MelonLoader.MelonLogger;
 using Il2CppMirror;
+using JetBrains.Annotations;
 
 namespace ITBLiveSplitModEnhanced
 {
@@ -30,7 +31,12 @@ namespace ITBLiveSplitModEnhanced
         private static bool elevator = false;
         private static bool hammer = false;
         //Setup GUI
-        private Rect runSelectorRect = new Rect(10f, 10f, 200f, 250f);
+        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 110f);
+        private float buttonWidth = 260f;
+        private float buttonWidth2 = 250f;
+        private float buttonWidth3 = 240f;
+        private float buttonHeight = 30f;
+        private float smallButtonWidth = 80f;
         private static bool showCategoriesMenu = false;
         private static bool showEndingsMenu = false;
         private static bool showILsMenu = false;
@@ -46,7 +52,7 @@ namespace ITBLiveSplitModEnhanced
         //Setup Run Categories
         private enum RunCategory
         {
-            Escaped,
+            Escape,
             Fun,
             Chase,
             Sewer,
@@ -125,19 +131,30 @@ namespace ITBLiveSplitModEnhanced
             GUI.Label(new Rect(Screen.width - 500 - 10, 100, 500, 100), listOfMods, style);
         }
 
+        public void CreateCategory(string category, float offsety)
+        {
+            if (GUI.Button(new Rect(runSelectorRect.x + 15f, runSelectorRect.y + offsety, buttonWidth3, 30f), category))
+            {
+                if (Enum.TryParse(category, out RunCategory runCategory))
+                {
+                    selectedRunCategory = runCategory;
+                }
+                else
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Red, "Invalid Category: " + category);
+                }
+                MelonLogger.Msg(System.ConsoleColor.Green, category + " Button Down");
+            }
+        }
+
         public void DrawRunSelector()
         {
             GUI.Box(runSelectorRect, "Run Selector");
-            runSelectorRect.width = 270;
-            runSelectorRect.height = 110;
-            float buttonWidth = runSelectorRect.width - 10f;
-            float buttonHeight = 30f;
-            float smallButtonWidth = 80f;
-
+           
             // Run Types
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 40f, smallButtonWidth, buttonHeight), "Any"))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 40f, smallButtonWidth, buttonHeight), "Any%"))
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Any Button Down");
+                MelonLogger.Msg(System.ConsoleColor.Green, "Any% Button Down");
                 selectedGameRule = GameRule.Any;
             }
 
@@ -162,28 +179,56 @@ namespace ITBLiveSplitModEnhanced
 
             if (showCategoriesMenu)
             {
-                GUI.Box(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 105f, buttonWidth, 110f), "");
+                GUI.Box(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 115f, buttonWidth, buttonHeight * 3 + 5 * (3+1)), "");
 
                 // Endings submenu
-                if (GUI.Button(new Rect(runSelectorRect.x + 15f, runSelectorRect.y + 110f, buttonWidth - 20f, buttonHeight), "Endings"))
+                if (GUI.Button(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 120f, buttonWidth2, buttonHeight), "Endings"))
                 {
                     MelonLogger.Msg(System.ConsoleColor.Green, "Endings Button Down");
                     showEndingsMenu = !showEndingsMenu;
+                    showILsMenu = false;
+                    showCategoryExtensionsMenu = false;
+                }
+                if (showEndingsMenu)
+                {
+                    GUI.Box(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 230f, buttonWidth2, buttonHeight * 6 + 5 * (6+1)), "");
+                    //Individual Endings
+                    CreateCategory("Escape", 235f);
+                    CreateCategory("Fun", 270f);
+                    CreateCategory("Chase", 305f);
+                    CreateCategory("Sewer", 340f);
+                    CreateCategory("Hotel", 375f);
+                    CreateCategory("AllEndings", 410f);
                 }
 
                 // ILs submenu
-                if (GUI.Button(new Rect(runSelectorRect.x + 15f, runSelectorRect.y + 145f, buttonWidth - 20f, buttonHeight), "ILs"))
+                if (GUI.Button(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 155f, buttonWidth2, buttonHeight), "Individual Levels"))
                 {
                     MelonLogger.Msg(System.ConsoleColor.Green, "ILs Button Down");
                     showILsMenu = !showILsMenu;
+                    showEndingsMenu = false;
+                    showCategoryExtensionsMenu = false;
+                }
+                if (showILsMenu)
+                {
+                    GUI.Box(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 230f, buttonWidth2, buttonHeight * 7 + 5 * (7 + 1)), "");
+                    //Individual Levels
+                    CreateCategory("Darkrooms", 235f);
+                    CreateCategory("Garage", 270f);
+                    CreateCategory("Office", 305f);
+                    CreateCategory("FunRoom", 340f);
+                    CreateCategory("ChaseLevel", 375f);
+                    CreateCategory("Sewers", 410f);
+                    CreateCategory("TerrorHotel", 445f);
                 }
 
                 // Extensions submenu
-                if (GUI.Button(new Rect(runSelectorRect.x + 15f, runSelectorRect.y + 180f, buttonWidth - 20f, buttonHeight), "Extensions"))
+                if (GUI.Button(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 190f, buttonWidth2, buttonHeight), "Extensions"))
                 {
                     MelonLogger.Msg(System.ConsoleColor.Green, "Extensions Button Down");
                     showCategoryExtensionsMenu = !showCategoryExtensionsMenu;
                 }
+                
             }
         }
     }
