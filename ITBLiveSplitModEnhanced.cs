@@ -251,6 +251,8 @@ namespace ITBLiveSplitModEnhanced
                 return;
             }
             lsm.StartTimer();
+            
+            //Need to add something here that will only resume the timer after 3.94s
             lsm.ResumeTimer();
         }
 
