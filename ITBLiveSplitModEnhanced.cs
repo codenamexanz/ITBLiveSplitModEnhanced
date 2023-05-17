@@ -28,6 +28,7 @@ namespace ITBLiveSplitModEnhanced
         //Setup InGame bool - maybe deprecated in the future?
         private static bool elevator = false;
         private static bool hammer = false;
+        private static bool lightray = false;
 
         //Setup GUI
         #region GUI Fields
@@ -68,6 +69,8 @@ namespace ITBLiveSplitModEnhanced
         private static bool endSplitsFunEnd = false;
         private static bool endSplitsSewersEnd = false;
         private static bool endSplitsHotelEnd = false;
+        //Reset Split
+        private static bool mainMenuSplitsReset = true;
         //Death Splits
         private static bool deathSplitsBacteria = false;
         private static bool deathSplitsDog = false;
@@ -89,6 +92,7 @@ namespace ITBLiveSplitModEnhanced
         private static bool darkroomsSplitsVHSPutIn = false;
         private static bool darkroomsSplitsHammer = false;
         private static bool darkroomsSplitsClock = false;
+        private static bool darkroomsSplitsPliers = false;
         private static bool darkroomsSplitsRedKey = false;
         private static bool darkroomsSplitsFuseBox = false;
         private static bool darkroomsSplitsMirror = false;
@@ -112,20 +116,21 @@ namespace ITBLiveSplitModEnhanced
         //Sewers Splits
         private static bool sewersSplitsMetalDetector = false;
         private static bool sewersSplitsSpikesOff = false;
-        private static bool sewersSplitsLabyrinthChain = false;
+        private static bool sewersSplitsLabyrinthChainCut = false;
         private static bool sewersSplitsCrusherPuzzle = false;
         private static bool sewersSplitsGearSpawn = false;
         private static bool sewersSplitsCounterweights = false;
         //Hotel Splits
-        private static bool hotelSplitsPaintings = false;
-        private static bool hotelSplitsStatue = false;
-        private static bool hotelSplitsVinyl = false;
-        private static bool hotelSplitsPiano = false;
-        private static bool hotelSplitsPhone = false;
-        private static bool hotelSplitsGemIn = false;
-        private static bool hotelSplitsBoilerKeys = false;
-        private static bool hotelSplitsBoilersOn = false;
-        private static bool hotelSplitsRingTable = false;
+        private static bool hotelSplitsPaintings = false; // Test OnSolve
+        private static bool hotelSplitsStatue = false; // Works Multi
+        private static bool hotelSplitsVinyl = false; // Works Multi
+        private static bool hotelSplitsPiano = false; // Works Multi
+        private static bool hotelSplitsPhone = false; // Solo Only
+        private static bool hotelSplitsGemIn = false; // Placement Player
+        private static bool hotelSplitsBoilerKeys = false; // Closest Player
+        private static bool hotelSplitsBoilersOn = false; // Test SmokeOn
+        private static bool hotelSplitsBathroomLock = false; // Works Multi
+        private static bool hotelSplitsPlaceCocoon = false; // Works Multi
         #endregion
 
         public override void OnInitializeMelon()
@@ -214,6 +219,28 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
+        public static void SplitTimer(string splitName)
+        {
+            MelonLogger.Msg(System.ConsoleColor.Green, "Testing " + splitName);
+            if (lsm == null)
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                return;
+            }
+            lsm.SplitTimer();
+        }
+
+        public static void StartTimer(string splitName)
+        {
+            MelonLogger.Msg(System.ConsoleColor.Green, "Testing Start " + splitName);
+            if (lsm == null)
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                return;
+            }
+            lsm.StartTimer();
+        }
+
         public void SetAllButtonsFalse()
         {
             showStartSplits = false;
@@ -249,8 +276,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showStartSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 8 + 5 * 9), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 8 + 5 * 9), "");                
                 CreateButton("Ladder Start", ref ladderStart, 130f);
                 CreateButton("Darkrooms Start", ref darkroomsStart, 165f);
                 CreateButton("Garage Start", ref garageStart, 200f);
@@ -280,8 +306,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showPauseSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");                
                 CreateButton("Escape End Pause", ref pauseSplitsEscapeEnd, 130f);
                 CreateButton("Chase End Pause", ref pauseSplitsChaseEnd, 165f);
                 CreateButton("Fun End Pause", ref pauseSplitsFunEnd, 200f);
@@ -308,8 +333,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showEndSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");                
                 CreateButton("Escape End", ref endSplitsEscapeEnd, 130f);
                 CreateButton("Chase End", ref endSplitsChaseEnd, 165f);
                 CreateButton("Fun End", ref endSplitsFunEnd, 200f);
@@ -336,8 +360,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showDeathSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 15 + 5 * 16), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 15 + 5 * 16), "");                
                 CreateButton("Bacteria Death", ref deathSplitsBacteria, 130f);
                 CreateButton("Dog Death", ref deathSplitsDog, 165f);
                 CreateButton("Smiler Death", ref deathSplitsSmiler, 200f);
@@ -375,8 +398,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showDarkroomsSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");                
                 CreateButton("Darkrooms Test 1", ref endSplitsEscapeEnd, 130f);
                 CreateButton("Darkrooms Test 2", ref endSplitsChaseEnd, 165f);
                 CreateButton("Darkrooms Test 3", ref endSplitsFunEnd, 200f);
@@ -404,8 +426,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showGarageSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");                
                 CreateButton("Garage Test 1", ref endSplitsEscapeEnd, 130f);
                 CreateButton("Garage Test 2", ref endSplitsChaseEnd, 165f);
                 CreateButton("Garage Test 3", ref endSplitsFunEnd, 200f);
@@ -433,8 +454,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showOfficeSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");                
                 CreateButton("Office Test 1", ref endSplitsEscapeEnd, 130f);
                 CreateButton("Office Test 2", ref endSplitsChaseEnd, 165f);
                 CreateButton("Office Test 3", ref endSplitsFunEnd, 200f);
@@ -462,8 +482,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showSewersSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");               
                 CreateButton("Sewers Test 1", ref endSplitsEscapeEnd, 130f);
                 CreateButton("Sewers Test 2", ref endSplitsChaseEnd, 165f);
                 CreateButton("Sewers Test 3", ref endSplitsFunEnd, 200f);
@@ -491,8 +510,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showHotelSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");
-                //Note this will need moved down with the introduction of death + level split buttons
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 5 + 5 * 6), "");                
                 CreateButton("Hotel Test 1", ref endSplitsEscapeEnd, 130f);
                 CreateButton("Hotel Test 2", ref endSplitsChaseEnd, 165f);
                 CreateButton("Hotel Test 3", ref endSplitsFunEnd, 200f);
@@ -501,72 +519,18 @@ namespace ITBLiveSplitModEnhanced
             }
 
             #endregion
-
-
-            /*
-            // Categories Menu
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 75f, buttonWidth, buttonHeight), "Categories"))
-            {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Categories Button Down");
-                showCategoriesMenu = !showCategoriesMenu;
-            }
-
-            if (showCategoriesMenu)
-            {
-                GUI.Box(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 115f, buttonWidth, buttonHeight * 3 + 5 * (3+1)), "");
-
-                // Endings submenu
-                if (GUI.Button(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 120f, buttonWidth2, buttonHeight), "Endings"))
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "Endings Button Down");
-                    showEndingsMenu = !showEndingsMenu;
-                    showILsMenu = false;
-                    //showCategoryExtensionsMenu = false;
-                }
-                if (showEndingsMenu)
-                {
-                    GUI.Box(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 230f, buttonWidth2, buttonHeight * 6 + 5 * (6+1)), "");
-                    //Individual Endings
-
-                }
-
-                // ILs submenu
-                if (GUI.Button(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 155f, buttonWidth2, buttonHeight), "Individual Levels"))
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "ILs Button Down");
-                    showILsMenu = !showILsMenu;
-                    showEndingsMenu = false;
-                    //showCategoryExtensionsMenu = false;
-                }
-                if (showILsMenu)
-                {
-                    GUI.Box(new Rect(runSelectorRect.x + 10f, runSelectorRect.y + 230f, buttonWidth2, buttonHeight * 7 + 5 * (7 + 1)), "");
-                    //Individual Levels
-
-                }
-            }
-            */
         }
 
-        /*
+        
         //Start of Patches
-        //Start Timer when using ladder on level 0 - Usable for Escape, Fun, Chase, Sewers, Hotel, All Endings
+        //Start Timer when using ladder in lobby
         [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
         class BasePlayerControllerPatch
         {
             [HarmonyPrefix]
             internal static void UseStairsPrefix()
             {
-                if (new[] { RunCategory.Escape, RunCategory.Fun, RunCategory.Chase, RunCategory.Sewer, RunCategory.Hotel, RunCategory.AllEndings }.Contains(selectedRunCategory))
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "Testing Ladder");
-                    if (lsm == null)
-                    {
-                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                        return;
-                    }
-                    lsm.StartTimer();
-                }
+                StartTimer("Ladder");
             }
         }
         
@@ -579,19 +543,12 @@ namespace ITBLiveSplitModEnhanced
             {
                 if (!elevator)
                 {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "Testing Elevator");
-                    if (lsm == null)
-                    {
-                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                        return;
-                    }
-
-                    lsm.SplitTimer();
+                    SplitTimer("Elevator");
                     elevator = true;
                 }
             }
         }
-
+        //To add fuses box here? ambiguous routing really to go bodies or red room
         //Split Timer when the Mirror breaks
         [HarmonyPatch(typeof(LostPersonsPuzzle), "DestroyGlass")]
         class LostPersonsPuzzlePatch
@@ -599,14 +556,29 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void DestroyGlassPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Mirror Break");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
+                SplitTimer("Mirror Break");
+            }
+        }
 
-                lsm.SplitTimer();
+        //Split Timer when Levers done
+        [HarmonyPatch(typeof(ColorLeverDoorLock), "OnUnlock")]
+        class ColorLeverDoorLockPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnUnlockPrefix()
+            {
+                SplitTimer("Levers");
+            }
+        }
+
+        //Split Timer when rad door unlocks
+        [HarmonyPatch(typeof(RadiationPuzzle), "OnZoneUnlocked")]
+        class RadiationPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnZoneUnlockedPrefix()
+            {
+                SplitTimer("Radiation Unlock");
             }
         }
 
@@ -615,17 +587,16 @@ namespace ITBLiveSplitModEnhanced
         class DoorChainPatch
         {
             [HarmonyPrefix]
-            internal static void OnChainCutPrefix()
+            internal static void OnChainCutPrefix(DoorChain __instance)
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Chain Cut");
-                if (lsm == null)
+                if (__instance.name == "CHAINS_OFFICEDOOR" && darkroomsSplitsChainCut)
                 {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
+                    SplitTimer("Rad Chain Cut");
                 }
-
-                lsm.SplitTimer();
-                elevator = false;
+                if (__instance.name == "Chains (1)" && sewersSplitsLabyrinthChainCut)
+                {
+                    SplitTimer("Labyrinth Chain Cut");
+                }
             }
         }
 
@@ -636,14 +607,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void StartPartyGamesPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Party Room Start");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Party Room Start");
             }
         }
 
@@ -654,14 +618,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void ExplodePrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Cake Explode");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Cake Explode");
             }
         }
 
@@ -672,14 +629,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void SetGateOpenStatusPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Security Door");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Security Grid");
             }
         }
 
@@ -690,14 +640,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void DisablePikesPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Disable Spikes");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Disable Spikes");
             }
         }
 
@@ -708,14 +651,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnGridSolvedPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Garbage Crusher Discable");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Crusher Puzzle");
             }
         }
 
@@ -726,14 +662,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnUnlockedPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Medallion puzzle");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Medallion Puzzle");
             }
         }
 
@@ -744,14 +673,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnPuzzleSolvePrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Gear Rotation puzzle");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Gear Rotation Puzzle");
             }
         }
 
@@ -765,35 +687,156 @@ namespace ITBLiveSplitModEnhanced
                 numEscaped++;
                 if (numEscaped == numPlayers)
                 {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "Testing Escape/Chase Ending");
-                    if (lsm == null)
-                    {
-                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                        return;
-                    }
-
-                    lsm.SplitTimer();
+                    SplitTimer("Escape/Chase Ending");
                 }
             }
         }
 
-        //Split Timer when the Fun Ending and Sewer Ending 
+        //Split Timer when the Fun/Sewer/Hotel Ending 
         [HarmonyPatch(typeof(EndInteractable), "Interact")]
         class EndInteractablePatch
         {
             [HarmonyPrefix]
             internal static void InteractPrefix()
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Fun/Sewer Ending");
-                if (lsm == null)
-                {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
-                }
-
-                lsm.SplitTimer();
+                SplitTimer("Fun/Sewer/Hotel Ending");
             }
         }
-        */
+
+        //TERRORHOTEL
+        //Split Timer when Art Room Complete
+        [HarmonyPatch(typeof(ArtRoomPuzzle), "OnSolve")] // Check
+        public class ArtOnSolvePatch
+        {
+            [HarmonyPrefix]
+            internal static void ArtOnSolvePrefix()
+            {
+                SplitTimer("Art Room Puzzzle");
+            }
+        }
+
+        //Split Timer when Locked Statue Face Placed
+        [HarmonyPatch(typeof(LockedStatue), "OnUnlock")] // Works Multi
+        public class LockedStatuePatch
+        {
+            [HarmonyPrefix]
+            internal static void LockedStatuePrefix()
+            {
+                SplitTimer("Statue");
+            }
+        }
+    
+        //Split Timer when Vinyl Added
+        [HarmonyPatch(typeof(Gramophone), "OnVynilAdd")] // Works Multi
+        public class OnVynilAddPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnVynilAddPrefix()
+            {
+                SplitTimer("Vinyl");
+            }
+        }
+    
+        //Split Timer when Piano Solved
+        [HarmonyPatch(typeof(Piano), "OnSolve")] // Works Multi
+        public class PianoOnSolvePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnSolvePrefix()
+            {
+                SplitTimer("Piano");
+            }
+        }
+        
+        //Split Timer when answering Phone
+        [HarmonyPatch(typeof(OldPhone), "CmdAnswerPhone")] // Works only for person answering
+        public class CmdAnswerPhonePatch
+        {
+            [HarmonyPrefix]
+            internal static void CmdAnswerPhonePrefix()
+            {
+                SplitTimer("CmdAnswerPhone");
+            }
+        }
+    
+        //Split Timer when adding gem to ray puzzle
+        [HarmonyPatch(typeof(ReflectLightRay), "OnGemAdd")] // Works only for person putting in
+        public class OnAddGemPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnAddGemPrefix()
+            {
+                SplitTimer("OnGemAdd");
+            }
+        }
+
+        //Split Timer when ray puzzle complete
+        [HarmonyPatch(typeof(ReflectLightRay), "OnSolve")] // Works only for closest person?
+        public class ReflectLightRayOnSolvePatch
+        {
+            [HarmonyPrefix]
+            internal static void ReflectLightRayOnSolvePrefix()
+            {
+                if (!lightray)
+                {
+                    SplitTimer("Light Puzzle");
+                }
+            }
+        }
+
+        //Split Timer when successful boiler lever pull
+        [HarmonyPatch(typeof(BoilersInterruptor), "RpcTurnOn")] // Check multi - works solo
+        public class RpcTurnOnPatch
+        {
+            [HarmonyPrefix]
+            internal static void RpcTurnOnPrefix()
+            {
+                SplitTimer("Boilers Active");
+            }
+        }
+
+        //Split Timer when smoke turns on in moth room
+        [HarmonyPatch(typeof(PitfallsPuzzle), "OnSmokeOn")] // check - works solo
+        public class OnSmokeOnPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnSmokeOnPrefix()
+            {
+                SplitTimer("Boilers Active // Pitfalls - OnSmokeOn");
+            }
+        }
+
+        //Pliers, Metal Detector and Bathroom Locks Split
+        [HarmonyPatch(typeof(NumericLock), "OnUnlock")] // Works multi
+        public class NumericLockPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnUnlockPrefix(NumericLock __instance)
+            {
+                if (__instance.transform.parent.parent.name == "__BACKROOMS (LEVEL2)" && darkroomsSplitsPliers)
+                {
+                    SplitTimer("Pliers Lock");
+                }
+                if (__instance.transform.parent.parent.name == "__BACKROOMS SEWERAGE (LEVEL 4)" && sewersSplitsMetalDetector)
+                {
+                    SplitTimer("Metal Detector Lock");
+                }
+                if (__instance.transform.parent.parent.name == "--------SCENE------------" && hotelSplitsBathroomLock)
+                {
+                    SplitTimer("Bathroom Lock");
+                }
+            }
+        }
+        
+        //Split timer when Cocoon added to table
+        [HarmonyPatch(typeof(RecepcionistFeedPuzzle), "OnAddCocoon")] // Works multi
+        public class OnAddCocoonPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnAddCocoonPrefix()
+            {
+                SplitTimer("Cocoon Add");
+            }
+        }
     }
 }
