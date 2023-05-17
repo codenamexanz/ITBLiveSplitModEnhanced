@@ -231,29 +231,47 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        public static void SplitTimer(string splitName)
+        public static void SplitTimer(string splitName, ref bool boolVariable)
         {
-            MelonLogger.Msg(System.ConsoleColor.Green, "Testing " + splitName);
-            if (lsm == null)
+            if (boolVariable)
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                return;
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing " + splitName);
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+                lsm.SplitTimer();
             }
-            lsm.SplitTimer();
         }
 
-        public static void StartResumeTimer(string splitName)
+        public static void StartTimer(string splitName, ref bool boolVariable)
         {
-            MelonLogger.Msg(System.ConsoleColor.Green, "Testing Start/Resume " + splitName);
-            if (lsm == null)
+            if (boolVariable)
             {
-                MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                return;
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Start " + splitName);
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+                lsm.StartTimer();
             }
-            lsm.StartTimer();
-            
-            //Need to add something here that will only resume the timer after 3.94s
-            lsm.ResumeTimer();
+        }
+
+        public static async Task LadderResume(string splitName)
+        {
+            if (ladderStart)
+            {
+                MelonLogger.Msg(System.ConsoleColor.Green, "Testing Resume " + splitName);
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+                await Task.Delay(TimeSpan.FromSeconds(3.91));
+                lsm.ResumeTimer();
+            }
         }
 
         public void SetAllButtonsFalse()
@@ -324,7 +342,7 @@ namespace ITBLiveSplitModEnhanced
 
             #region End Splits
 
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 90f, buttonWidth, buttonHeight), "Splits that End"))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 90f, buttonWidth, buttonHeight), "Ending Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "End Splits Button Down");
                 if (showEndSplits)
@@ -536,7 +554,7 @@ namespace ITBLiveSplitModEnhanced
             #endregion
         }
 
-        
+
         //Start of Patches
         //Start Timer when using ladder in lobby
         [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
@@ -545,7 +563,8 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void UseStairsPrefix()
             {
-                StartResumeTimer("Ladder");
+                    StartTimer("Ladder", ref ladderStart);
+                    LadderResume("Ladder Resume");
             }
         }
 
@@ -559,7 +578,7 @@ namespace ITBLiveSplitModEnhanced
             {
                 if (!elevator)
                 {
-                    SplitTimer("Elevator");
+                    SplitTimer("Elevator", ref darkroomsSplitsLobbyElevator);
                     elevator = true;
                 }
             }
@@ -572,7 +591,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void CmdInsertCassetePrefix()
             {
-                SplitTimer("VHS");
+                SplitTimer("VHS", ref darkroomsSplitsVHSPutIn);
             }
         }
 
@@ -582,9 +601,10 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void TargetOnItemPickupPrefix(string item)
             {
-                if (item == "Hammer")
+                if (item == "Hammer" && !hammer)
                 {
-                    SplitTimer("Hammer");
+                    SplitTimer("Hammer", ref darkroomsSplitsHammer);
+                    hammer = true;
                 }
             }
         }
@@ -596,7 +616,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void SolvePuzzlePrefix()
             {
-                SplitTimer("Shadow Puzzle");
+                SplitTimer("Shadow Puzzle", ref darkroomsHorsePuzzle);
             }
         }
 
@@ -608,7 +628,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnResolvePuzzlePrefix()
             {
-                SplitTimer("Clock");
+                SplitTimer("Clock", ref darkroomsSplitsClock);
             }
         }
 
@@ -620,7 +640,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void DestroyGlassPrefix()
             {
-                SplitTimer("Mirror Break");
+                SplitTimer("Mirror Break", ref darkroomsSplitsMirror);
             }
         }
 
@@ -631,7 +651,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnUnlockPrefix()
             {
-                SplitTimer("Levers");
+                SplitTimer("Levers", ref darkroomsSplitsLevers);
             }
         }
 
@@ -642,7 +662,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnZoneUnlockedPrefix()
             {
-                SplitTimer("Radiation Unlock");
+                SplitTimer("Radiation Unlock", ref darkroomsSplitsRadiation);
             }
         }
 
@@ -653,13 +673,13 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnChainCutPrefix(DoorChain __instance)
             {
-                if (__instance.name == "CHAINS_OFFICEDOOR" && darkroomsSplitsChainCut)
+                if (__instance.name == "CHAINS_OFFICEDOOR")
                 {
-                    SplitTimer("Rad Chain Cut");
+                    SplitTimer("Rad Chain Cut", ref darkroomsSplitsChainCut);
                 }
-                if (__instance.name == "Chains (1)" && sewersSplitsLabyrinthChainCut)
+                if (__instance.name == "Chains (1)")
                 {
-                    SplitTimer("Labyrinth Chain Cut");
+                    SplitTimer("Labyrinth Chain Cut", ref sewersSplitsLabyrinthChainCut);
                 }
             }
         }
@@ -672,7 +692,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void StartPartyGamesPrefix()
             {
-                SplitTimer("Party Room Start");
+                SplitTimer("Party Room Start", ref officeSplitsPartyStart);
             }
         }
 
@@ -683,7 +703,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void ExplodePrefix()
             {
-                SplitTimer("Cake Explode");
+                SplitTimer("Cake Explode", ref officeSplitsCakeExplode);
             }
         }
 
@@ -694,7 +714,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void SetGateOpenStatusPrefix()
             {
-                SplitTimer("Security Grid");
+                SplitTimer("Security Grid", ref officeSplitsSecurityGrid);
             }
         }
 
@@ -705,7 +725,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void DisablePikesPrefix()
             {
-                SplitTimer("Disable Spikes");
+                SplitTimer("Disable Spikes", ref sewersSplitsSpikesOff);
             }
         }
 
@@ -716,7 +736,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnGridSolvedPrefix()
             {
-                SplitTimer("Crusher Puzzle");
+                SplitTimer("Crusher Puzzle", ref sewersSplitsCrusherPuzzle);
             }
         }
 
@@ -727,7 +747,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnUnlockedPrefix()
             {
-                SplitTimer("Medallion Puzzle");
+                SplitTimer("Medallion Puzzle", ref sewersSplitsGearSpawn);
             }
         }
 
@@ -738,7 +758,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnPuzzleSolvePrefix()
             {
-                SplitTimer("Gear Rotation Puzzle");
+                SplitTimer("Gear Rotation Puzzle", ref sewersSplitsCounterweights);
             }
         }
 
@@ -752,7 +772,7 @@ namespace ITBLiveSplitModEnhanced
                 numEscaped++;
                 if (numEscaped == numPlayers)
                 {
-                    SplitTimer("Escape/Chase Ending");
+                    SplitTimer("Escape/Chase Ending", ref endSplitsEscapeChase);
                 }
             }
         }
@@ -764,7 +784,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void InteractPrefix()
             {
-                SplitTimer("Fun/Sewer/Hotel Ending");
+                SplitTimer("Fun/Sewer/Hotel Ending", ref endSplitsFunSewersHotel);
             }
         }
 
@@ -776,7 +796,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void ArtOnSolvePrefix()
             {
-                SplitTimer("Art Room Puzzzle");
+                SplitTimer("Art Room Puzzzle", ref hotelSplitsPaintings);
             }
         }
 
@@ -787,7 +807,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void LockedStatuePrefix()
             {
-                SplitTimer("Statue");
+                SplitTimer("Statue", ref hotelSplitsStatue);
             }
         }
     
@@ -798,7 +818,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnVynilAddPrefix()
             {
-                SplitTimer("Vinyl");
+                SplitTimer("Vinyl", ref hotelSplitsVinyl);
             }
         }
     
@@ -809,7 +829,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnSolvePrefix()
             {
-                SplitTimer("Piano");
+                SplitTimer("Piano", ref hotelSplitsPiano);
             }
         }
         
@@ -820,7 +840,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void CmdAnswerPhonePrefix()
             {
-                SplitTimer("CmdAnswerPhone");
+                SplitTimer("CmdAnswerPhone", ref hotelSplitsPhone);
             }
         }
     
@@ -831,7 +851,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnAddGemPrefix()
             {
-                SplitTimer("OnGemAdd");
+                SplitTimer("OnGemAdd", ref hotelSplitsGemIn);
             }
         }
 
@@ -844,7 +864,7 @@ namespace ITBLiveSplitModEnhanced
             {
                 if (!lightray)
                 {
-                    SplitTimer("Light Puzzle");
+                    SplitTimer("Light Puzzle", ref hotelSplitsBoilerKeys);
                 }
             }
         }
@@ -856,7 +876,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void RpcTurnOnPrefix()
             {
-                SplitTimer("Boilers Active");
+                SplitTimer("Boilers Active", ref hotelSplitsBoilersOn);
             }
         }
 
@@ -867,7 +887,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnSmokeOnPrefix()
             {
-                SplitTimer("Boilers Active // Pitfalls - OnSmokeOn");
+                SplitTimer("Boilers Active // Pitfalls - OnSmokeOn", ref hotelSplitsBoilersOn);
             }
         }
 
@@ -878,21 +898,21 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnUnlockPrefix(NumericLock __instance)
             {
-                if (__instance.transform.parent.parent.name == "__BACKROOMS (LEVEL2)" && darkroomsSplitsPliers)
+                if (__instance.transform.parent.parent.name == "__BACKROOMS (LEVEL2)")
                 {
-                    SplitTimer("Pliers Lock");
+                    SplitTimer("Pliers Lock", ref darkroomsSplitsPliers);
                 }
-                if (__instance.transform.parent.parent.name == "__BACKROOMS SEWERAGE (LEVEL 4)" && sewersSplitsMetalDetector)
+                if (__instance.transform.parent.parent.name == "__BACKROOMS SEWERAGE (LEVEL 4)")
                 {
-                    SplitTimer("Metal Detector Lock");
+                    SplitTimer("Metal Detector Lock", ref sewersSplitsMetalDetector);
                 }
-                if (__instance.transform.parent.parent.name == "--------SCENE------------" && hotelSplitsBathroomLock)
+                if (__instance.transform.parent.parent.name == "--------SCENE------------")
                 {
-                    SplitTimer("Bathroom Lock");
+                    SplitTimer("Bathroom Lock", ref hotelSplitsBathroomLock);
                 }
             }
         }
-        
+
         //Split timer when Cocoon added to table
         [HarmonyPatch(typeof(RecepcionistFeedPuzzle), "OnAddCocoon")] // Works multi
         public class OnAddCocoonPatch
@@ -900,11 +920,9 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnAddCocoonPrefix()
             {
-                SplitTimer("Cocoon Add");
+                SplitTimer("Cocoon Add", ref hotelSplitsPlaceCocoon);
             }
         }
-
-
 
         //PlayerController.PlayMonsterDeathAnimation(MonsterObject)
     }
