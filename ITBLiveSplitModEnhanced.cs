@@ -554,8 +554,41 @@ namespace ITBLiveSplitModEnhanced
             #endregion
         }
 
+        //TODO Patches:
+        //      Hotel Start
+        //      Bacteria Death
+        //      Dog Death
+        //      Smiler Death
+        //      Radiation Death
+        //      SkinStealer Death
+        //      Gas Death
+        //      PartyGoer Death
+        //      Balloons Death
+        //      Electricity Death
+        //      Spider Death
+        //      Rat Death
+        //      Crusher Death
+        //      Spikes Death
+        //      Moth Death
+        //      Receptionist Death
+        //      ValvesDone
+        //      GarageElevator
+        //      FusesDone
+        //      Office Balloons
+        //      Office Presents
+        //      Office BlueDoor
+        //      Office RedDoor
+
+        //Need Testing Patches:
+        //
+
+        //Broken Patches:
+        //
+
 
         //Start of Patches
+        #region All Patches
+
         //Start Timer when using ladder in lobby
         [HarmonyPatch(typeof(BasePlayerController), "UseStairs")]
         class BasePlayerControllerPatch
@@ -568,7 +601,6 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        #region Darkrooms Patches
         //Split Timer when using the elevator
         [HarmonyPatch(typeof(Elevator), "RpcDoorElevatorPlay")]
         class ElevatorPatch
@@ -683,7 +715,6 @@ namespace ITBLiveSplitModEnhanced
                 }
             }
         }
-        #endregion
 
         //Split Timer when the Party Room Starts
         [HarmonyPatch(typeof(PartygoerRoom), "StartPartyGames")]
@@ -923,7 +954,7 @@ namespace ITBLiveSplitModEnhanced
                 SplitTimer("Cocoon Add", ref hotelSplitsPlaceCocoon);
             }
         }
-
+        #endregion
         //PlayerController.PlayMonsterDeathAnimation(MonsterObject)
     }
 }
