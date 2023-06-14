@@ -625,7 +625,7 @@ namespace ITBLiveSplitModEnhanced
         class ElevatorPatch
         {
             [HarmonyPrefix]
-            internal static void UseElevatorPrefix(Elevator __instance)
+            internal static void RpcDoorElevatorPlayPrefix(Elevator __instance)
             {
                 if (__instance.name == "Elevator" && elevator == false)
                 {
