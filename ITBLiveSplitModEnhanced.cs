@@ -27,12 +27,12 @@ namespace ITBLiveSplitModEnhanced
         private static LiveSplitClient? lsm;
         //Setup InGame bool - maybe deprecated in the future?
         private static bool elevator = false;
-        private static bool hammer = false;
+        private static bool garageElevator = false;
         private static bool lightray = false;
 
         //Setup GUI
         #region GUI Fields
-        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 340f);
+        private Rect runSelectorRect = new Rect(10f, 10f, 270f, 335f);
         private float buttonWidth = 260f;
         private float buttonHeight = 30f;
         private static bool showStartSplits = false;
@@ -48,13 +48,12 @@ namespace ITBLiveSplitModEnhanced
 
         //Setup Splits
         #region Splits Fields
-        //Reset Split
-        private static bool mainMenuSplitsReset = true;
 
-        #region Start Splits
-        //Start Splits
+        #region Control Splits
+        //Control Splits
         private static bool ladderStart = true; // true by default since its normal
         private static bool hotelStart = true;
+        private static bool mainMenuSplitsReset = true;
         #endregion
 
         #region Pause Splits
@@ -90,16 +89,16 @@ namespace ITBLiveSplitModEnhanced
 
         #region Darkrooms Splits
         //Darkrooms Splits
-        private static bool darkroomsSplitsLobbyElevator = false;
-        private static bool darkroomsSplitsVHSPutIn = false;
-        private static bool darkroomsSplitsHammer = false;
-        private static bool darkroomsHorsePuzzle = false;
-        private static bool darkroomsSplitsClock = false;
-        private static bool darkroomsSplitsPliers = false;
-        private static bool darkroomsSplitsMirror = false;
-        private static bool darkroomsSplitsLevers = false;
-        private static bool darkroomsSplitsRadiation = false;
-        private static bool darkroomsSplitsChainCut = false;
+        private static bool darkroomsSplitsLobbyElevator = true;
+        private static bool darkroomsSplitsVHSPutIn = true;
+        private static bool darkroomsSplitsBodyLocker = true;
+        private static bool darkroomsHorsePuzzle = true;
+        private static bool darkroomsSplitsClock = true;
+        private static bool darkroomsSplitsPliers = true;
+        private static bool darkroomsSplitsMirror = true;
+        private static bool darkroomsSplitsLevers = true;
+        private static bool darkroomsSplitsRadiation = true;
+        private static bool darkroomsSplitsChainCut = true;
         #endregion
 
         #region Garage Splits
@@ -129,7 +128,7 @@ namespace ITBLiveSplitModEnhanced
         private static bool sewersSplitsGearSpawn = false;
         private static bool sewersSplitsCounterweights = false;
         #endregion
-        
+
         #region Hotel Splits
         //Hotel Splits
         private static bool hotelSplitsPaintings = false; // Test OnSolve
@@ -164,21 +163,34 @@ namespace ITBLiveSplitModEnhanced
             {
                 inGame = false;
                 elevator = false;
-                hammer = false;
+                garageElevator = false;
                 MelonEvents.OnGUI.Subscribe(DrawRegisteredMods, 100);
                 MelonEvents.OnGUI.Subscribe(DrawRunSelector, 100);
-                if (lsm == null)
+                if (mainMenuSplitsReset)
                 {
-                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
-                    return;
+                    if (lsm == null)
+                    {
+                        MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                        return;
+                    }
+                    lsm.ResetTimer();
                 }
-                lsm.ResetTimer(); //Probably bad practice considering Hotel Ending wouldnt want reset? Though I guess you can just add times in post.
             }
             if (sceneName == "MainLevel" || sceneName == "HOTEL_SCENE")
             {
                 inGame = true;
                 MelonEvents.OnGUI.Unsubscribe(DrawRegisteredMods);
                 MelonEvents.OnGUI.Unsubscribe(DrawRunSelector);
+            }
+            if (sceneName == "HOTEL_SCENE")
+            {
+                StartTimer("Hotel Start", ref hotelStart);
+                if (lsm == null)
+                {
+                    MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
+                    return;
+                }
+                lsm.ResumeTimer();
             }
         }
 
@@ -223,7 +235,7 @@ namespace ITBLiveSplitModEnhanced
                 buttonStyle.normal.textColor = GUI.skin.button.normal.textColor;
             }
 
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + offsety + 225f, buttonWidth, buttonHeight), label, buttonStyle))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + offsety + 215f, buttonWidth, buttonHeight), label, buttonStyle))
             {
                 boolVariable = !boolVariable;
                 MelonLogger.Msg(System.ConsoleColor.Green, label + " Button Down");
@@ -291,9 +303,9 @@ namespace ITBLiveSplitModEnhanced
         {
             GUI.Box(runSelectorRect, "Autosplit Customizer");
 
-            #region Start Splits
+            #region Control Splits
 
-            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 20f, buttonWidth, buttonHeight), "Splits that Start"))
+            if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 20f, buttonWidth, buttonHeight), "Splits that Start/Reset"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Start Splits Button Down");
                 if (showStartSplits)
@@ -309,9 +321,10 @@ namespace ITBLiveSplitModEnhanced
 
             if (showStartSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 2 + 5 * 3), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 3 + 5 * 4), "");
                 CreateButton("Ladder Start", ref ladderStart, 130f);
                 CreateButton("Hotel Start", ref hotelStart, 165f);
+                CreateButton("Main Menu Reset Timer", ref mainMenuSplitsReset, 200f);
             }
             #endregion
 
@@ -333,7 +346,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showPauseSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 2 + 5 * 3), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 2 + 5 * 3), "");
                 CreateButton("Escape Chase Pause", ref pauseSplitsEscapeChase, 130f);
                 CreateButton("Fun Sewers Hotel Pause", ref pauseSplitsFunSewersHotel, 165f);
 
@@ -358,7 +371,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showEndSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 2 + 5 * 3), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 2 + 5 * 3), "");
                 CreateButton("Escape Chase End", ref endSplitsEscapeChase, 130f);
                 CreateButton("Fun Sewers Hotel End", ref endSplitsFunSewersHotel, 165f);
             }
@@ -382,7 +395,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showDeathSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 15 + 5 * 16), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 15 + 5 * 16), "");
                 CreateButton("Bacteria Death", ref deathSplitsBacteria, 130f);
                 CreateButton("Dog Death", ref deathSplitsDog, 165f);
                 CreateButton("Smiler Death", ref deathSplitsSmiler, 200f);
@@ -420,10 +433,10 @@ namespace ITBLiveSplitModEnhanced
 
             if (showDarkroomsSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 10 + 5 * 11), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 10 + 5 * 11), "");
                 CreateButton("Lobby Elevator", ref darkroomsSplitsLobbyElevator, 130f);
                 CreateButton("VHS", ref darkroomsSplitsVHSPutIn, 165f);
-                CreateButton("Hammer Pickup", ref darkroomsSplitsHammer, 200f);
+                CreateButton("Body Locker", ref darkroomsSplitsBodyLocker, 200f);
                 CreateButton("Horse Puzzle", ref darkroomsHorsePuzzle, 235f);
                 CreateButton("Clock", ref darkroomsSplitsClock, 270f);
                 CreateButton("Pliers", ref darkroomsSplitsPliers, 305f);
@@ -453,7 +466,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showGarageSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 2 + 5 * 3), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 2 + 5 * 3), "");
                 CreateButton("Valves", ref garageSplitsValvesDone, 130f);
                 CreateButton("Office Elevator", ref garageSplitsGarageElevator, 165f);
             }
@@ -478,7 +491,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showOfficeSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 8 + 5 * 9), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 8 + 5 * 9), "");
                 CreateButton("Fuses", ref officeSplitsFusesDone, 130f);
                 CreateButton("Party Start", ref officeSplitsPartyStart, 165f);
                 CreateButton("Balloons Finish", ref officeSplitsBalloons, 200f);
@@ -509,7 +522,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showSewersSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 6 + 5 * 7), "");               
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 6 + 5 * 7), "");
                 CreateButton("Metal Detector", ref sewersSplitsMetalDetector, 130f);
                 CreateButton("Spikes Off", ref sewersSplitsSpikesOff, 165f);
                 CreateButton("Labyrinth Chain", ref sewersSplitsLabyrinthChainCut, 200f);
@@ -538,7 +551,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showHotelSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 350f, 270f, buttonHeight * 10 + 5 * 11), "");                
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 340f, 270f, buttonHeight * 10 + 5 * 11), "");
                 CreateButton("Paintings", ref hotelSplitsPaintings, 130f);
                 CreateButton("Statue", ref hotelSplitsStatue, 165f);
                 CreateButton("Vinyl", ref hotelSplitsVinyl, 200f);
@@ -555,7 +568,6 @@ namespace ITBLiveSplitModEnhanced
         }
 
         //TODO Patches:
-        //      Hotel Start
         //      Bacteria Death
         //      Dog Death
         //      Smiler Death
@@ -581,6 +593,13 @@ namespace ITBLiveSplitModEnhanced
 
         //Need Testing Patches:
         //
+        //Multiplayer:
+        //  VHS
+        //  BodyLocker
+        //  HorsePuzzle
+        //  ClockSolve
+        //  LeversUnlock
+        //  RadiationDone
 
         //Broken Patches:
         //
@@ -596,8 +615,8 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void UseStairsPrefix()
             {
-                    StartTimer("Ladder", ref ladderStart);
-                    LadderResume("Ladder Resume");
+                StartTimer("Ladder", ref ladderStart);
+                LadderResume("Ladder Resume");
             }
         }
 
@@ -606,12 +625,17 @@ namespace ITBLiveSplitModEnhanced
         class ElevatorPatch
         {
             [HarmonyPrefix]
-            internal static void RpcDoorElevatorPlayPrefix()
+            internal static void UseElevatorPrefix(Elevator __instance)
             {
-                if (!elevator)
+                if (__instance.name == "Elevator" && elevator == false)
                 {
                     SplitTimer("Elevator", ref darkroomsSplitsLobbyElevator);
                     elevator = true;
+                }
+                if (__instance.name == "Elevator (1)" && garageElevator == false)
+                {
+                    SplitTimer("Garage Complete", ref garageSplitsGarageElevator);
+                    garageElevator = true;
                 }
             }
         }
@@ -627,19 +651,20 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        [HarmonyPatch(typeof(PlayerInventory), "TargetOnItemPickup")]
-        class TargetOnItemPickupPatch
+
+        [HarmonyPatch(typeof(Door), "UnlockDoor")]
+        class CmdUnlockDoor
         {
             [HarmonyPrefix]
-            internal static void TargetOnItemPickupPrefix(string item)
+            internal static void CmdUnlockDoorPrefix(Door __instance)
             {
-                if (item == "Hammer" && !hammer)
+                if (__instance.name == "LockerDoor")
                 {
-                    SplitTimer("Hammer", ref darkroomsSplitsHammer);
-                    hammer = true;
+                    SplitTimer("Body Locker", ref darkroomsSplitsBodyLocker);
                 }
             }
         }
+
 
         //Split Timer when solving shadow puzzle
         [HarmonyPatch(typeof(ShadowPuzzle), "OnPuzzleSolve")]
@@ -841,7 +866,7 @@ namespace ITBLiveSplitModEnhanced
                 SplitTimer("Statue", ref hotelSplitsStatue);
             }
         }
-    
+
         //Split Timer when Vinyl Added
         [HarmonyPatch(typeof(Gramophone), "OnVynilAdd")] // Works Multi
         public class OnVynilAddPatch
@@ -852,7 +877,7 @@ namespace ITBLiveSplitModEnhanced
                 SplitTimer("Vinyl", ref hotelSplitsVinyl);
             }
         }
-    
+
         //Split Timer when Piano Solved
         [HarmonyPatch(typeof(Piano), "OnSolve")] // Works Multi
         public class PianoOnSolvePatch
@@ -863,7 +888,7 @@ namespace ITBLiveSplitModEnhanced
                 SplitTimer("Piano", ref hotelSplitsPiano);
             }
         }
-        
+
         //Split Timer when answering Phone
         [HarmonyPatch(typeof(OldPhone), "CmdAnswerPhone")] // Works only for person answering
         public class CmdAnswerPhonePatch
@@ -874,7 +899,7 @@ namespace ITBLiveSplitModEnhanced
                 SplitTimer("CmdAnswerPhone", ref hotelSplitsPhone);
             }
         }
-    
+
         //Split Timer when adding gem to ray puzzle
         [HarmonyPatch(typeof(ReflectLightRay), "OnGemAdd")] // Works only for person putting in
         public class OnAddGemPatch
@@ -958,33 +983,3 @@ namespace ITBLiveSplitModEnhanced
         //PlayerController.PlayMonsterDeathAnimation(MonsterObject)
     }
 }
-/*
-[09:08:36.888] Players in Lobby
-[09:08:36.888] Player[ConnID:0] - Xanz
-[09:08:58.280] [ITB_LSM_Enhanced] Testing Start Ladder
-[09:08:58.280] [ITB_LSM_Enhanced] Attempting to send 'starttimer' command to LiveSplit Server
-[09:08:58.281] [ITB_LSM_Enhanced] Succesfully sent 'starttimer' command to LiveSplit Server
-[09:09:12.524] [ITB_LSM_Enhanced] Testing Elevator
-[09:09:12.525] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:09:12.526] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-[09:10:02.098] [ITB_LSM_Enhanced] Testing VHS
-[09:10:02.099] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:10:02.100] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-[09:10:25.661] [ITB_LSM_Enhanced] Testing Hammer
-[09:10:25.661] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:10:25.662] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-Horse Puzzle is not here but I fixed it
-[09:11:04.281] [ITB_LSM_Enhanced] Testing Clock
-[09:11:04.281] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:11:04.282] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-[09:13:38.233] [ITB_LSM_Enhanced] Testing Mirror Break
-[09:13:38.233] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:13:38.234] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-[09:15:10.056] [ITB_LSM_Enhanced] Testing Levers
-[09:15:10.056] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:15:10.058] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-[09:17:09.193] [ITB_LSM_Enhanced] Testing Radiation Unlock
-[09:17:09.193] [ITB_LSM_Enhanced] Attempting to send 'split' command to LiveSplit Server
-[09:17:09.194] [ITB_LSM_Enhanced] Succesfully sent 'split' command to LiveSplit Server
-Padlock and Chain not done because not active bools
-*/
