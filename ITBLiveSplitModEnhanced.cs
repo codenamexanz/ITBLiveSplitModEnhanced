@@ -22,7 +22,7 @@ namespace ITBLiveSplitModEnhanced
         private PlayerController[]? players;
         private static int numPlayers = 0;
         private static int numEscaped = 0;
-        private static float interval = 0;
+        private static float timer = 0;
 
         private static LiveSplitClient? lsm;
 
@@ -147,7 +147,7 @@ namespace ITBLiveSplitModEnhanced
             if (sceneName == "MainMenu")
             {
                 inGame = false;
-                interval = 0;
+                timer = 0;
                 elevator = false;
                 garageElevator = false;
                 lightray = false;
@@ -188,8 +188,8 @@ namespace ITBLiveSplitModEnhanced
 
         public override void OnUpdate()
         {
-            interval += Time.deltaTime;
-            if (inGame && interval > 3)
+            timer += Time.deltaTime;
+            if (inGame && timer > 3)
             {
                 players = FindObjectsOfType<PlayerController>();
                 if (numPlayers != players.Length)
@@ -201,7 +201,7 @@ namespace ITBLiveSplitModEnhanced
                         MelonLogger.Msg(System.ConsoleColor.Magenta, players[i].name);
                     }
                 }
-                interval = 0;
+                timer = 0;
             }
         }
 
