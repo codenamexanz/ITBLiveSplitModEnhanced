@@ -6,7 +6,6 @@ using Il2Cpp;
 using HarmonyLib;
 using System.Reflection;
 using Il2CppMirror;
-using Il2CppSystem;
 
 namespace ITBLiveSplitModEnhanced
 {
@@ -30,6 +29,8 @@ namespace ITBLiveSplitModEnhanced
         private static bool elevator = false;
         private static bool garageElevator = false;
         private static bool lightray = false;
+        private static bool cathedral = false;
+        private static int partyRoomCounter = 0;
 
         //Setup GUI
         #region GUI Fields
@@ -88,7 +89,6 @@ namespace ITBLiveSplitModEnhanced
         private static MelonPreferences_Entry<bool> officeSplitsPresents = category.CreateEntry<bool>("Presents", false);
         private static MelonPreferences_Entry<bool> officeSplitsCakeExplode = category.CreateEntry<bool>("CakeExplode", false);
         private static MelonPreferences_Entry<bool> officeSplitsBlueDoor = category.CreateEntry<bool>("BlueDoor", false);
-        private static MelonPreferences_Entry<bool> officeSplitsRedDoor = category.CreateEntry<bool>("RedDoor", false);
         private static MelonPreferences_Entry<bool> officeSplitsSecurityGrid = category.CreateEntry<bool>("SecurityGrid", false);
         #endregion
 
@@ -124,7 +124,6 @@ namespace ITBLiveSplitModEnhanced
         private static MelonPreferences_Entry<bool> grassroomsSplitsEnergyPuzzle = category.CreateEntry<bool>("Energy Puzzle", false);
         private static MelonPreferences_Entry<bool> grassroomsSplitsCathedral = category.CreateEntry<bool>("Cathedral", false);
         private static MelonPreferences_Entry<bool> grassroomsSplitsLibrary = category.CreateEntry<bool>("Library", false);
-        
         #endregion
 
         #endregion
@@ -149,6 +148,9 @@ namespace ITBLiveSplitModEnhanced
                 inGame = false;
                 elevator = false;
                 garageElevator = false;
+                lightray = false;
+                cathedral = false;
+                partyRoomCounter = 0;
                 MelonEvents.OnGUI.Subscribe(DrawRegisteredMods, 100);
                 MelonEvents.OnGUI.Subscribe(DrawRunSelector, 100);
                 MelonEvents.OnGUI.Subscribe(DrawVersion, 100);
@@ -423,7 +425,7 @@ namespace ITBLiveSplitModEnhanced
                     MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
                     return;
                 }
-                await Task.Delay(System.TimeSpan.FromSeconds(3.91));
+                await Task.Delay(TimeSpan.FromSeconds(3.91));
                 lsm.ResumeTimer();
             }
         }
@@ -463,7 +465,6 @@ namespace ITBLiveSplitModEnhanced
             officeSplitsPresents.Value = false;
             officeSplitsCakeExplode.Value = false;
             officeSplitsBlueDoor.Value = false;
-            officeSplitsRedDoor.Value = false;
             officeSplitsSecurityGrid.Value = false;
             sewersSplitsMetalDetector.Value = false;
             sewersSplitsSpikesOff.Value = false;
@@ -636,15 +637,14 @@ namespace ITBLiveSplitModEnhanced
 
             if (showOfficeSplits.Value)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 8 + 5 * 9), "");
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 7 + 5 * 8), "");
                 CreateButton("Fuses", ref officeSplitsFusesDone, 60f);
                 CreateButton("Party Start", ref officeSplitsPartyStart, 95f);
                 CreateButton("Balloons Finish", ref officeSplitsBalloons, 130f);
                 CreateButton("Presents Finish", ref officeSplitsPresents, 165f);
                 CreateButton("Cake Explode", ref officeSplitsCakeExplode, 200f);
                 CreateButton("Blue Door", ref officeSplitsBlueDoor, 235f);
-                CreateButton("Red Door", ref officeSplitsRedDoor, 270f);
-                CreateButton("Security Grid", ref officeSplitsSecurityGrid, 305f);
+                CreateButton("Red Door", ref officeSplitsSecurityGrid, 270f);
             }
 
             #endregion
@@ -742,23 +742,13 @@ namespace ITBLiveSplitModEnhanced
 
         
         //TODO Patches:
-        //      ValvesDone
-        //      GarageElevator
-        //      FusesDone
-        //      Office Balloons
-        //      Office Presents
-        //      Office BlueDoor
-        //      Office RedDoor
+        //      
 
         //Need Testing Patches:
-        //
+        // 
+
         //Multiplayer:
-        //  VHS
-        //  BodyLocker
-        //  HorsePuzzle
-        //  ClockSolve
-        //  LeversUnlock
-        //  RadiationDone
+        //  Most of them
 
         //Broken Patches:
         //
@@ -801,7 +791,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when adding VHS
         [HarmonyPatch(typeof(CassetePlayer), "CmdInsertCassete")]
-        class CmdInsertCassetePatch
+        class CassetePlayerPatch
         {
             [HarmonyPrefix]
             internal static void CmdInsertCassetePrefix()
@@ -812,7 +802,7 @@ namespace ITBLiveSplitModEnhanced
 
 
         [HarmonyPatch(typeof(Door), "UnlockDoor")]
-        class CmdUnlockDoor
+        class DoorPatch
         {
             [HarmonyPrefix]
             internal static void CmdUnlockDoorPrefix(Door __instance)
@@ -827,7 +817,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when solving shadow puzzle
         [HarmonyPatch(typeof(ShadowPuzzle), "OnPuzzleSolve")]
-        class SolvePuzzlePatch
+        class ShadowPuzzlePatch
         {
             [HarmonyPrefix]
             internal static void SolvePuzzlePrefix()
@@ -839,7 +829,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when solving clock puzzle
         [HarmonyPatch(typeof(ClockPuzzle), "OnResolvePuzzle")]
-        class OnResolvePuzzlePatch
+        class ClockPuzzlePatch
         {
             [HarmonyPrefix]
             internal static void OnResolvePuzzlePrefix()
@@ -848,7 +838,6 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        //To add fuses box here? ambiguous routing really to go bodies or red room
         //Split Timer when the Mirror breaks
         [HarmonyPatch(typeof(LostPersonsPuzzle), "DestroyGlass")]
         class LostPersonsPuzzlePatch
@@ -882,7 +871,7 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        //Split Timer when the chain is cut after radiation
+        //Split Timer when the chain is cut after radiation or labyrinth
         [HarmonyPatch(typeof(DoorChain), "OnChainCut")]
         class DoorChainPatch
         {
@@ -900,6 +889,28 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
+        //Split Timer when the Valves are done
+        [HarmonyPatch(typeof(ValvesPuzzle), "OnPuzzleResolve")]
+        class ValvesPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnPuzzleResolvePrefix()
+            {
+                SplitTimer("Valves", ref garageSplitsValvesDone);
+            }
+        }
+
+        //Split Timer when fuses added
+        [HarmonyPatch(typeof(FuseBox), "OnLeverChange")]
+        class FuseBoxPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnLeverChange()
+            {
+                SplitTimer("Fuses", ref officeSplitsPartyStart);
+            }
+        }
+
         //Split Timer when the Party Room Starts
         [HarmonyPatch(typeof(PartygoerRoom), "StartPartyGames")]
         class PartygoerRoomPatch
@@ -911,7 +922,36 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
+        //Split Timer when the balloons end
+        [HarmonyPatch(typeof(PartygoerRoom), "OnGameChange")]
+        class PartygoerRoomBalloonsPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnGameChangePrefix()
+            {
+                partyRoomCounter++;
+                if (partyRoomCounter == 2)
+                {
+                    SplitTimer("Balloons", ref officeSplitsBalloons);
+                }
+            }
+        }
         //Split Timer when the Party Room Starts
+        [HarmonyPatch(typeof(PartygoerRoom), "OnGameChange")]
+        class PartygoerRoomGiftsPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnGameChangePrefix()
+            {
+                if (partyRoomCounter == 3)
+                {
+                    SplitTimer("Gifts", ref officeSplitsPresents);
+                }
+            }
+        }
+
+
+        //Split Timer when the Party Room Ends
         [HarmonyPatch(typeof(PartygoerCake), "Explode")]
         class PartygoerCakePatch
         {
@@ -922,7 +962,18 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        //Split Timer when the Security Door
+        //Split Timer when the blue door unlocks
+        [HarmonyPatch(typeof(MainComputer), "RpcUnlockMain")]
+        class MainComputerPatch
+        {
+            [HarmonyPrefix]
+            internal static void RpcUnlockMainPrefix()
+            {
+                SplitTimer("Blue Door", ref officeSplitsBlueDoor);
+            }
+        }
+
+        //Split Timer when the Security Door unlocks
         [HarmonyPatch(typeof(SecretGridComputerPuzzle), "SetGateOpenStatus")]
         class SecretGridComputerPuzzlePatch
         {
@@ -1006,7 +1057,7 @@ namespace ITBLiveSplitModEnhanced
         //TERRORHOTEL
         //Split Timer when Art Room Complete
         [HarmonyPatch(typeof(ArtRoomPuzzle), "OnSolve")] // Check
-        public class ArtOnSolvePatch
+        public class ArtRoomPuzzlePatch
         {
             [HarmonyPrefix]
             internal static void ArtOnSolvePrefix()
@@ -1028,7 +1079,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when Vinyl Added
         [HarmonyPatch(typeof(Gramophone), "OnVynilAdd")] // Works Multi
-        public class OnVynilAddPatch
+        public class GramophonePatch
         {
             [HarmonyPrefix]
             internal static void OnVynilAddPrefix()
@@ -1039,7 +1090,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when Piano Solved
         [HarmonyPatch(typeof(Piano), "OnSolve")] // Works Multi
-        public class PianoOnSolvePatch
+        public class PianoPatch
         {
             [HarmonyPrefix]
             internal static void OnSolvePrefix()
@@ -1049,8 +1100,8 @@ namespace ITBLiveSplitModEnhanced
         }
 
         //Split Timer when answering Phone
-        [HarmonyPatch(typeof(OldPhone), "CmdAnswerPhone")] // Works only for person answering
-        public class CmdAnswerPhonePatch
+        [HarmonyPatch(typeof(OldPhone), "Interact")] // Works only for person answering
+        public class OldPhonePatch
         {
             [HarmonyPrefix]
             internal static void CmdAnswerPhonePrefix()
@@ -1061,7 +1112,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when adding gem to ray puzzle
         [HarmonyPatch(typeof(ReflectLightRay), "OnGemAdd")] // Works only for person putting in
-        public class OnAddGemPatch
+        public class ReflectLightRayPatch
         {
             [HarmonyPrefix]
             internal static void OnAddGemPrefix()
@@ -1080,13 +1131,14 @@ namespace ITBLiveSplitModEnhanced
                 if (!lightray)
                 {
                     SplitTimer("Light Puzzle", ref hotelSplitsBoilerKeys);
+                    lightray = true;
                 }
             }
         }
 
         //Split Timer when successful boiler lever pull
         [HarmonyPatch(typeof(BoilersInterruptor), "RpcTurnOn")] // Check multi - works solo
-        public class RpcTurnOnPatch
+        public class BoilersInterruptorPatch
         {
             [HarmonyPrefix]
             internal static void RpcTurnOnPrefix()
@@ -1095,16 +1147,6 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        //Split Timer when smoke turns on in moth room // Will split when code wrong, not worth using
-        [HarmonyPatch(typeof(PitfallsPuzzle), "OnSmokeOn")] // check - works solo
-        public class OnSmokeOnPatch
-        {
-            [HarmonyPrefix]
-            internal static void OnSmokeOnPrefix()
-            {
-                SplitTimer("Boilers Active // Pitfalls - OnSmokeOn", ref hotelSplitsBoilersOn);
-            }
-        }
 
         //Pliers, Metal Detector and Bathroom Locks Split
         [HarmonyPatch(typeof(NumericLock), "OnUnlock")] // Works multi
@@ -1130,12 +1172,89 @@ namespace ITBLiveSplitModEnhanced
 
         //Split timer when Cocoon added to table
         [HarmonyPatch(typeof(RecepcionistFeedPuzzle), "OnAddCocoon")] // Works multi
-        public class OnAddCocoonPatch
+        public class RecepcionistFeedPuzzlePatch
         {
             [HarmonyPrefix]
             internal static void OnAddCocoonPrefix()
             {
                 SplitTimer("Cocoon Add", ref hotelSplitsPlaceCocoon);
+            }
+        }
+
+        //Split Timer when Laptop done
+        [HarmonyPatch(typeof(Laptop), "OnCompleted")]
+        class LaptopPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnCompletedPrefix()
+            {
+                SplitTimer("Laptop", ref grassroomsSplitsLaptop);
+            }
+        }
+
+        //Split Timer when Case done
+        [HarmonyPatch(typeof(CaseCodePuzzle), "OnPuzzleSolve")]
+        class CaseCodePuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnPuzzleSolvePrefix()
+            {
+                SplitTimer("Case", ref grassroomsSplitsCase);
+            }
+        }
+
+        //Split Timer when ControlPanel done
+        [HarmonyPatch(typeof(ControlPanel), "CompletePanelPuzzle")]
+        class ControlPanelPatch
+        {
+            [HarmonyPrefix]
+            internal static void CompletePanelPuzzlePrefix()
+            {
+                SplitTimer("Energy Puzzle", ref grassroomsSplitsEnergyPuzzle);
+            }
+        }
+
+        //Split Timer when CathedralPuzzle done
+        [HarmonyPatch(typeof(CathedralPuzzle), "OnCinematicStatusChange")]
+        class CathedralPuzzlePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnCinematicStatusChangePrefix()
+            {
+                if (!cathedral)
+                {
+                    SplitTimer("Cathedral", ref grassroomsSplitsCathedral);
+                }
+                cathedral = true;
+            }
+        }
+
+        //Split Timer when LibraryPuzzleBookcase done
+        [HarmonyPatch(typeof(LibraryPuzzleBookcase), "OnComplete")]
+        class LibraryPuzzleBookcasePatch
+        {
+            [HarmonyPrefix]
+            internal static void OnCompletePrefix()
+            {
+                SplitTimer("Library", ref grassroomsSplitsLibrary);
+            }
+        }
+
+        //Split Timer when random picker puzzle done
+        [HarmonyPatch(typeof(SwitchesBox), "OnSolve")]
+        class SwitchesBoxPatch
+        {
+            [HarmonyPrefix]
+            internal static void OnCompletePrefix(SwitchesBox __instance)
+            {
+                if (__instance.name == "SwitchesBox_1")
+                {
+                    SplitTimer("Start Door", ref grassroomsSplitsStartDoor);
+                }
+                if (__instance.name == "SwitchesBox_2")
+                {
+                    SplitTimer("Storage", ref grassroomsSplitsStorage);
+                }
             }
         }
         #endregion
