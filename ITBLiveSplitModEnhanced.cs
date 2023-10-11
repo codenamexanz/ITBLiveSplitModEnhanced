@@ -6,7 +6,6 @@ using Il2Cpp;
 using HarmonyLib;
 using System.Reflection;
 using Il2CppMirror;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ITBLiveSplitModEnhanced
 {
@@ -166,10 +165,6 @@ namespace ITBLiveSplitModEnhanced
             {
                 lsm = new LiveSplitClient();
             }
-
-            #region MelonPref Setup
-            
-            #endregion
         }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
