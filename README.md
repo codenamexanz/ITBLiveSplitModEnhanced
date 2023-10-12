@@ -20,7 +20,7 @@ A MelonLoader mod that autosplits by sending commands to the livesplit server, w
   - Download the LiveSplit Server component https://github.com/LiveSplit/LiveSplit.Server/releases/download/1.8.19/LiveSplit.Server.zip
   - Add both of the .dll files into your LiveSplit/Components folder, located where your LiveSplit is installed 
   - Start LiveSplit and within your Layout Editor add a new item using the plus symbol and under control, called LiveSplit Server
-  - Setup your Splits like the examples splits above
+  - Setup your Splits according to the custom splits you selected!
 
 ### Once all the setups are complete you have everything you need to use the AutoSplitter
 
