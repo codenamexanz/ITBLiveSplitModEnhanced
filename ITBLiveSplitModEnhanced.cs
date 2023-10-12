@@ -57,61 +57,61 @@ namespace ITBLiveSplitModEnhanced
 
         #region Control Splits
         //Control Splits
-        private static MelonPreferences_Entry<bool> ladderStart = category.CreateEntry<bool>("ladderStart", false);
-        private static MelonPreferences_Entry<bool> hotelStart = category.CreateEntry<bool>("hotelStart", false);
-        private static MelonPreferences_Entry<bool> mainMenuSplitsReset = category.CreateEntry<bool>("mainMenuResetSplits", false);
+        private static MelonPreferences_Entry<bool> ladderStart = category.CreateEntry<bool>("ladderStart", true);
+        private static MelonPreferences_Entry<bool> hotelStart = category.CreateEntry<bool>("hotelStart", true);
+        private static MelonPreferences_Entry<bool> mainMenuSplitsReset = category.CreateEntry<bool>("mainMenuResetSplits", true);
         #endregion
 
         #region Darkrooms Splits
         //Darkrooms Splits
-        private static MelonPreferences_Entry<bool> darkroomsSplitsLobbyElevator = category.CreateEntry<bool>("LobbyElevator", false);
+        private static MelonPreferences_Entry<bool> darkroomsSplitsLobbyElevator = category.CreateEntry<bool>("LobbyElevator", true);
         private static MelonPreferences_Entry<bool> darkroomsSplitsVHSPutIn = category.CreateEntry<bool>("VHS", false);
         private static MelonPreferences_Entry<bool> darkroomsSplitsBodyLocker = category.CreateEntry<bool>("BodyLocker", false);
         private static MelonPreferences_Entry<bool> darkroomsHorsePuzzle = category.CreateEntry<bool>("Horse", false);
         private static MelonPreferences_Entry<bool> darkroomsSplitsClock = category.CreateEntry<bool>("Clock", false);
         private static MelonPreferences_Entry<bool> darkroomsSplitsPliers = category.CreateEntry<bool>("Pliers", false);
-        private static MelonPreferences_Entry<bool> darkroomsSplitsMirror = category.CreateEntry<bool>("Mirror", false);
+        private static MelonPreferences_Entry<bool> darkroomsSplitsMirror = category.CreateEntry<bool>("Mirror", true);
         private static MelonPreferences_Entry<bool> darkroomsSplitsLevers = category.CreateEntry<bool>("Levers", false);
         private static MelonPreferences_Entry<bool> darkroomsSplitsRadiation = category.CreateEntry<bool>("RadiationDoor", false);
-        private static MelonPreferences_Entry<bool> darkroomsSplitsChainCut = category.CreateEntry<bool>("ChainCut", false);
+        private static MelonPreferences_Entry<bool> darkroomsSplitsChainCut = category.CreateEntry<bool>("ChainCut", true);
         #endregion
 
         #region Garage Splits
         //Garage Splits
         private static MelonPreferences_Entry<bool> garageSplitsValvesDone = category.CreateEntry<bool>("ValvesDone", false);
-        private static MelonPreferences_Entry<bool> garageSplitsGarageElevator = category.CreateEntry<bool>("GarageElevator", false);
+        private static MelonPreferences_Entry<bool> garageSplitsGarageElevator = category.CreateEntry<bool>("GarageElevator", true);
         #endregion
 
         #region Office Splits
         //Office Splits
         private static MelonPreferences_Entry<bool> officeSplitsFusesDone = category.CreateEntry<bool>("FusesDone", false);
-        private static MelonPreferences_Entry<bool> officeSplitsPartyStart = category.CreateEntry<bool>("PartyStart", false);
+        private static MelonPreferences_Entry<bool> officeSplitsPartyStart = category.CreateEntry<bool>("PartyStart", true);
         private static MelonPreferences_Entry<bool> officeSplitsBalloons = category.CreateEntry<bool>("Balloons", false);
         private static MelonPreferences_Entry<bool> officeSplitsPresents = category.CreateEntry<bool>("Presents", false);
-        private static MelonPreferences_Entry<bool> officeSplitsCakeExplode = category.CreateEntry<bool>("CakeExplode", false);
+        private static MelonPreferences_Entry<bool> officeSplitsCakeExplode = category.CreateEntry<bool>("CakeExplode", true);
         private static MelonPreferences_Entry<bool> officeSplitsBlueDoor = category.CreateEntry<bool>("BlueDoor", false);
-        private static MelonPreferences_Entry<bool> officeSplitsSecurityGrid = category.CreateEntry<bool>("SecurityGrid", false);
+        private static MelonPreferences_Entry<bool> officeSplitsSecurityGrid = category.CreateEntry<bool>("SecurityGrid", true);
         #endregion
 
         #region Sewer Splits
         //Sewers Splits
         private static MelonPreferences_Entry<bool> sewersSplitsMetalDetector = category.CreateEntry<bool>("MetalDetector", false);
-        private static MelonPreferences_Entry<bool> sewersSplitsSpikesOff = category.CreateEntry<bool>("Spikes Off", false);
-        private static MelonPreferences_Entry<bool> sewersSplitsLabyrinthChainCut = category.CreateEntry<bool>("Labyrinth Chain Cut", false);
-        private static MelonPreferences_Entry<bool> sewersSplitsCrusherPuzzle = category.CreateEntry<bool>("Crusher Puzzle", false);
-        private static MelonPreferences_Entry<bool> sewersSplitsGearSpawn = category.CreateEntry<bool>("Gear Spawn", false);
-        private static MelonPreferences_Entry<bool> sewersSplitsCounterweights = category.CreateEntry<bool>("Counterweights", false);
+        private static MelonPreferences_Entry<bool> sewersSplitsSpikesOff = category.CreateEntry<bool>("Spikes Off", true);
+        private static MelonPreferences_Entry<bool> sewersSplitsLabyrinthChainCut = category.CreateEntry<bool>("Labyrinth Chain Cut", true);
+        private static MelonPreferences_Entry<bool> sewersSplitsCrusherPuzzle = category.CreateEntry<bool>("Crusher Puzzle", true);
+        private static MelonPreferences_Entry<bool> sewersSplitsGearSpawn = category.CreateEntry<bool>("Gear Spawn", true);
+        private static MelonPreferences_Entry<bool> sewersSplitsCounterweights = category.CreateEntry<bool>("Counterweights", true);
         #endregion
 
         #region Hotel Splits
         //Hotel Splits
-        private static MelonPreferences_Entry<bool> hotelSplitsPaintings = category.CreateEntry<bool>("Paintings", false); // Test OnSolve
+        private static MelonPreferences_Entry<bool> hotelSplitsPaintings = category.CreateEntry<bool>("Paintings", true); // Test OnSolve
         private static MelonPreferences_Entry<bool> hotelSplitsStatue = category.CreateEntry<bool>("Statue", false); // Works Multi
         private static MelonPreferences_Entry<bool> hotelSplitsVinyl = category.CreateEntry<bool>("Vinyl", false); // Works Multi
-        private static MelonPreferences_Entry<bool> hotelSplitsPiano = category.CreateEntry<bool>("Piano", false); // Works Multi
-        private static MelonPreferences_Entry<bool> hotelSplitsPhone = category.CreateEntry<bool>("Phone", false); // Solo Only
+        private static MelonPreferences_Entry<bool> hotelSplitsPiano = category.CreateEntry<bool>("Piano", true); // Works Multi
+        private static MelonPreferences_Entry<bool> hotelSplitsPhone = category.CreateEntry<bool>("Phone", true); // Solo Only
         private static MelonPreferences_Entry<bool> hotelSplitsGemIn = category.CreateEntry<bool>("GemIn", false); // Placement Player
-        private static MelonPreferences_Entry<bool> hotelSplitsBoilerKeys = category.CreateEntry<bool>("BoilerKeys", false); // Closest Player
+        private static MelonPreferences_Entry<bool> hotelSplitsBoilerKeys = category.CreateEntry<bool>("BoilerKeys", true); // Closest Player
         private static MelonPreferences_Entry<bool> hotelSplitsBathroomLock = category.CreateEntry<bool>("BathroomLock", false); // Works Multi
         private static MelonPreferences_Entry<bool> hotelSplitsPlaceCocoon = category.CreateEntry<bool>("PlaceCocoon", false); // Works Multi
         #endregion
@@ -119,11 +119,11 @@ namespace ITBLiveSplitModEnhanced
         #region Grassrooms Splits
         private static MelonPreferences_Entry<bool> grassroomsSplitsStartDoor = category.CreateEntry<bool>("Start Door", false);
         private static MelonPreferences_Entry<bool> grassroomsSplitsStorage = category.CreateEntry<bool>("Storage", false);
-        private static MelonPreferences_Entry<bool> grassroomsSplitsCase = category.CreateEntry<bool>("Industrial Scissors", false);
-        private static MelonPreferences_Entry<bool> grassroomsSplitsLaptop = category.CreateEntry<bool>("Laptop", false);
-        private static MelonPreferences_Entry<bool> grassroomsSplitsEnergyPuzzle = category.CreateEntry<bool>("Energy Puzzle", false);
-        private static MelonPreferences_Entry<bool> grassroomsSplitsCathedral = category.CreateEntry<bool>("Cathedral", false);
-        private static MelonPreferences_Entry<bool> grassroomsSplitsLibrary = category.CreateEntry<bool>("Library", false);
+        private static MelonPreferences_Entry<bool> grassroomsSplitsCase = category.CreateEntry<bool>("Industrial Scissors", true);
+        private static MelonPreferences_Entry<bool> grassroomsSplitsLaptop = category.CreateEntry<bool>("Laptop", true);
+        private static MelonPreferences_Entry<bool> grassroomsSplitsEnergyPuzzle = category.CreateEntry<bool>("Energy Puzzle", true);
+        private static MelonPreferences_Entry<bool> grassroomsSplitsCathedral = category.CreateEntry<bool>("Cathedral", true);
+        private static MelonPreferences_Entry<bool> grassroomsSplitsLibrary = category.CreateEntry<bool>("Library", true);
         #endregion
 
         #endregion

@@ -30,7 +30,7 @@ A MelonLoader mod that autosplits by sending commands to the livesplit server, w
 
   - Select which actions the game should split on at the Main Menu, there are Common Split setups that can be used!
   - As long as the server is up before the game opens you should be good to start Speedrunning
-
+   
 ## Questions/Issues
 If you have any questions or issues feel free to contact Mr. Monocle or Xanz on discord
 
