@@ -45,14 +45,14 @@ namespace ITBLiveSplitModEnhanced
 
         #region Show Splits
         private static MelonPreferences_Category category = MelonPreferences.CreateCategory("ITB LSME");
-        private static MelonPreferences_Entry<bool> showStartSplits = category.CreateEntry<bool>("Start Splits", false);
-        private static MelonPreferences_Entry<bool> showCommonSplits = category.CreateEntry<bool>("Common Splits", false);
-        private static MelonPreferences_Entry<bool> showDarkroomsSplits = category.CreateEntry<bool>("Darkrooms Splits", false);
-        private static MelonPreferences_Entry<bool> showGarageSplits = category.CreateEntry<bool>("Garege Splits", false);
-        private static MelonPreferences_Entry<bool> showOfficeSplits = category.CreateEntry<bool>("Office Splits", false);
-        private static MelonPreferences_Entry<bool> showSewersSplits = category.CreateEntry<bool>("Sewers Splits", false);
-        private static MelonPreferences_Entry<bool> showHotelSplits = category.CreateEntry<bool>("Hotel Splits", false);
-        private static MelonPreferences_Entry<bool> showGrassroomsSplits = category.CreateEntry<bool>("Grassrooms Splits", false);
+        private static bool showStartSplits = false;
+        private static bool showCommonSplits = false;
+        private static bool showDarkroomsSplits = false;
+        private static bool showGarageSplits = false;
+        private static bool showOfficeSplits =  false;
+        private static bool showSewersSplits = false;
+        private static bool showHotelSplits = false;
+        private static bool showGrassroomsSplits = false;
         #endregion
 
         #region Control Splits
@@ -112,7 +112,6 @@ namespace ITBLiveSplitModEnhanced
         private static MelonPreferences_Entry<bool> hotelSplitsPhone = category.CreateEntry<bool>("Phone", false); // Solo Only
         private static MelonPreferences_Entry<bool> hotelSplitsGemIn = category.CreateEntry<bool>("GemIn", false); // Placement Player
         private static MelonPreferences_Entry<bool> hotelSplitsBoilerKeys = category.CreateEntry<bool>("BoilerKeys", false); // Closest Player
-        private static MelonPreferences_Entry<bool> hotelSplitsBoilersOn = category.CreateEntry<bool>("BoilersOn", false); // Test SmokeOn
         private static MelonPreferences_Entry<bool> hotelSplitsBathroomLock = category.CreateEntry<bool>("BathroomLock", false); // Works Multi
         private static MelonPreferences_Entry<bool> hotelSplitsPlaceCocoon = category.CreateEntry<bool>("PlaceCocoon", false); // Works Multi
         #endregion
@@ -434,14 +433,14 @@ namespace ITBLiveSplitModEnhanced
 
         public void SetAllButtonsFalse()
         {
-            showStartSplits.Value = false;
-            showCommonSplits.Value = false;
-            showDarkroomsSplits.Value = false;
-            showGarageSplits.Value = false;
-            showOfficeSplits.Value = false;
-            showSewersSplits.Value = false;
-            showHotelSplits.Value = false;
-            showGrassroomsSplits.Value = false;
+            showStartSplits = false;
+            showCommonSplits = false;
+            showDarkroomsSplits = false;
+            showGarageSplits = false;
+            showOfficeSplits = false;
+            showSewersSplits = false;
+            showHotelSplits = false;
+            showGrassroomsSplits = false;
         }
 
         public void SetAllSplitValuesFalse()
@@ -481,7 +480,6 @@ namespace ITBLiveSplitModEnhanced
             hotelSplitsPhone.Value = false;
             hotelSplitsGemIn.Value = false;
             hotelSplitsBoilerKeys.Value = false;
-            hotelSplitsBoilersOn.Value = false;
             hotelSplitsBathroomLock.Value = false;
             hotelSplitsPlaceCocoon.Value = false;
             grassroomsSplitsStartDoor.Value = false;
@@ -502,18 +500,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 20f, buttonWidth, buttonHeight), "Splits that Start/Reset"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Start Splits Button Down");
-                if (showStartSplits.Value)
+                if (showStartSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showStartSplits.Value = true;
+                    showStartSplits = true;
                 }
             }
 
-            if (showStartSplits.Value)
+            if (showStartSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 3 + 5 * 4), "");
                 CreateButton("Ladder Start", ref ladderStart, 60f);
@@ -527,18 +525,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 55f, buttonWidth, buttonHeight), "Common Split Setups"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Common Splits Button Down");
-                if (showCommonSplits.Value)
+                if (showCommonSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showCommonSplits.Value = true;
+                    showCommonSplits = true;
                 }
             }
 
-            if (showCommonSplits.Value)
+            if (showCommonSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 8 + 5 * 9), "");
                 CreateCommonButton("Escaped Ending", 0, 60f);
@@ -568,18 +566,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 90f, buttonWidth, buttonHeight), "Darkrooms Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Darkrooms Splits Button Down");
-                if (showDarkroomsSplits.Value)
+                if (showDarkroomsSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showDarkroomsSplits.Value = true;
+                    showDarkroomsSplits = true;
                 }
             }
 
-            if (showDarkroomsSplits.Value)
+            if (showDarkroomsSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 10 + 5 * 11), "");
                 CreateButton("Lobby Elevator", ref darkroomsSplitsLobbyElevator, 60f);
@@ -601,18 +599,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 125f, buttonWidth, buttonHeight), "Garage Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Garage Splits Button Down");
-                if (showGarageSplits.Value)
+                if (showGarageSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showGarageSplits.Value = true;
+                    showGarageSplits = true;
                 }
             }
 
-            if (showGarageSplits.Value)
+            if (showGarageSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 2 + 5 * 3), "");
                 CreateButton("Valves", ref garageSplitsValvesDone, 60f);
@@ -626,18 +624,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 160f, buttonWidth, buttonHeight), "Office Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Office Splits Button Down");
-                if (showOfficeSplits.Value)
+                if (showOfficeSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showOfficeSplits.Value = true;
+                    showOfficeSplits = true;
                 }
             }
 
-            if (showOfficeSplits.Value)
+            if (showOfficeSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 7 + 5 * 8), "");
                 CreateButton("Fuses", ref officeSplitsFusesDone, 60f);
@@ -656,18 +654,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 195f, buttonWidth, buttonHeight), "Sewers Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Sewers Splits Button Down");
-                if (showSewersSplits.Value)
+                if (showSewersSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showSewersSplits.Value = true;
+                    showSewersSplits = true;
                 }
             }
 
-            if (showSewersSplits.Value)
+            if (showSewersSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 6 + 5 * 7), "");
                 CreateButton("Metal Detector", ref sewersSplitsMetalDetector, 60f);
@@ -685,18 +683,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 230f, buttonWidth, buttonHeight), "Hotel Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Hotel Splits Button Down");
-                if (showHotelSplits.Value)
+                if (showHotelSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showHotelSplits.Value = true;
+                    showHotelSplits = true;
                 }
             }
 
-            if (showHotelSplits.Value)
+            if (showHotelSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 10 + 5 * 11), "");
                 CreateButton("Paintings", ref hotelSplitsPaintings, 60f);
@@ -706,9 +704,8 @@ namespace ITBLiveSplitModEnhanced
                 CreateButton("Phone", ref hotelSplitsPhone, 200f);
                 CreateButton("Gem Placed", ref hotelSplitsGemIn, 235f);
                 CreateButton("Mirror Puzzle", ref hotelSplitsBoilerKeys, 270f);
-                CreateButton("Boilers On", ref hotelSplitsBoilersOn, 305f);
-                CreateButton("Bathroom Lock", ref hotelSplitsBathroomLock, 340f);
-                CreateButton("Place Cocoon", ref hotelSplitsPlaceCocoon, 375f);
+                CreateButton("Bathroom Lock", ref hotelSplitsBathroomLock, 305f);
+                CreateButton("Place Cocoon", ref hotelSplitsPlaceCocoon, 340f);
             }
 
             #endregion
@@ -717,18 +714,18 @@ namespace ITBLiveSplitModEnhanced
             if (GUI.Button(new Rect(runSelectorRect.x + 5f, runSelectorRect.y + 265f, buttonWidth, buttonHeight), "Grassrooms Splits"))
             {
                 MelonLogger.Msg(System.ConsoleColor.Green, "Grassrooms Splits Button Down");
-                if (showGrassroomsSplits.Value)
+                if (showGrassroomsSplits)
                 {
                     SetAllButtonsFalse();
                 }
                 else
                 {
                     SetAllButtonsFalse();
-                    showGrassroomsSplits.Value = true;
+                    showGrassroomsSplits = true;
                 }
             }
 
-            if (showGrassroomsSplits.Value)
+            if (showGrassroomsSplits)
             {
                 GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 7 + 5 * 8), "");
                 CreateButton("Start Door", ref grassroomsSplitsStartDoor, 60f);
@@ -809,7 +806,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void CmdUnlockDoorPrefix(Door __instance)
             {
-                if (__instance.name == "LockerDoor")
+                if (__instance.name == "LockerDoor" && __instance.transform.parent.parent.name == "PROPS")
                 {
                     SplitTimer("Body Locker", ref darkroomsSplitsBodyLocker);
                 }
@@ -965,13 +962,16 @@ namespace ITBLiveSplitModEnhanced
         }
 
         //Split Timer when the blue door unlocks
-        [HarmonyPatch(typeof(MainComputer), "RpcUnlockMain")]
+        [HarmonyPatch(typeof(NetworkDoor), "ServerSetDoorOpen")]
         class MainComputerPatch
         {
             [HarmonyPrefix]
-            internal static void RpcUnlockMainPrefix()
+            internal static void ServerSetDoorOpenPrefix(NetworkDoor __instance)
             {
-                SplitTimer("Blue Door", ref officeSplitsBlueDoor);
+                if (__instance.transform.parent.parent.name == "PartyDoor (1)")
+                {
+                    SplitTimer("Blue Door", ref officeSplitsBlueDoor);
+                }
             }
         }
 
@@ -1138,16 +1138,6 @@ namespace ITBLiveSplitModEnhanced
             }
         }
 
-        //Split Timer when successful boiler lever pull
-        [HarmonyPatch(typeof(BoilersInterruptor), "RpcTurnOn")] // Check multi - works solo
-        public class BoilersInterruptorPatch
-        {
-            [HarmonyPrefix]
-            internal static void RpcTurnOnPrefix()
-            {
-                SplitTimer("Boilers Active", ref hotelSplitsBoilersOn);
-            }
-        }
 
 
         //Pliers, Metal Detector and Bathroom Locks Split
