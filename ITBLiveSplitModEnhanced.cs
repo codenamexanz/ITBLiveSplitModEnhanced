@@ -644,7 +644,7 @@ namespace ITBLiveSplitModEnhanced
                 CreateButton("Presents Finish", ref officeSplitsPresents, 165f);
                 CreateButton("Cake Explode", ref officeSplitsCakeExplode, 200f);
                 CreateButton("Blue Door", ref officeSplitsBlueDoor, 235f);
-                CreateButton("Red Door", ref officeSplitsSecurityGrid, 270f);
+                CreateButton("Security Grid", ref officeSplitsSecurityGrid, 270f);
             }
 
             #endregion
@@ -696,7 +696,7 @@ namespace ITBLiveSplitModEnhanced
 
             if (showHotelSplits)
             {
-                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 10 + 5 * 11), "");
+                GUI.Box(new Rect(runSelectorRect.x, runSelectorRect.y + 305f, 270f, buttonHeight * 9 + 5 * 10), "");
                 CreateButton("Paintings", ref hotelSplitsPaintings, 60f);
                 CreateButton("Statue", ref hotelSplitsStatue, 95f);
                 CreateButton("Vinyl", ref hotelSplitsVinyl, 130f);
