@@ -426,7 +426,7 @@ namespace ITBLiveSplitModEnhanced
                     MelonLogger.Msg(System.ConsoleColor.Green, "LiveSplitClient not created! How did you get here?");
                     return;
                 }
-                await Task.Delay(TimeSpan.FromSeconds(3.91));
+                await Task.Delay(TimeSpan.FromSeconds(3.92));
                 lsm.ResumeTimer();
             }
         }
