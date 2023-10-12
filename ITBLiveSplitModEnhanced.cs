@@ -963,7 +963,7 @@ namespace ITBLiveSplitModEnhanced
 
         //Split Timer when the blue door unlocks
         [HarmonyPatch(typeof(NetworkDoor), "ServerSetDoorOpen")]
-        class MainComputerPatch
+        class NetworkDoorPatch
         {
             [HarmonyPrefix]
             internal static void ServerSetDoorOpenPrefix(NetworkDoor __instance)
