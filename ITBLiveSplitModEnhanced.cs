@@ -906,7 +906,7 @@ namespace ITBLiveSplitModEnhanced
             [HarmonyPrefix]
             internal static void OnLeverChange()
             {
-                SplitTimer("Fuses", ref officeSplitsPartyStart);
+                SplitTimer("Fuses", ref officeSplitsFusesDone);
             }
         }
 
